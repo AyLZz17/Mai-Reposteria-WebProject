@@ -1,0 +1,99 @@
+<mxfile host="65bd71144e">
+    <diagram name="Página-1" id="o2mmUDX3J31VcL6HYs5n">
+        <mxGraphModel dx="1236" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-1" style="group" parent="1" vertex="1">
+                    <mxGeometry x="930" y="240" width="280" height="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-2" value="USUARIO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#000000;align=center;verticalAlign=middle;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=13;fontStyle=1;" parent="F4cocLlEntEi2rxBoyh9-1" vertex="1">
+                    <mxGeometry width="280" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-3" value="&lt;b&gt;&lt;u&gt;id_usuario&lt;/u&gt;&lt;/b&gt; : INT  (PK)&lt;br&gt;nombre : VARCHAR&lt;br&gt;correo : VARCHAR&lt;br&gt;foto_perfil : VARCHAR&lt;br&gt;fecha_registro : DATETIME&lt;br&gt;rol : VARCHAR" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="F4cocLlEntEi2rxBoyh9-1" vertex="1">
+                    <mxGeometry y="34" width="280" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-4" style="group" parent="1" vertex="1">
+                    <mxGeometry x="1450" y="460" width="280" height="204" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-5" value="PRODUCTO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#000000;align=center;verticalAlign=middle;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=13;fontStyle=1;" parent="F4cocLlEntEi2rxBoyh9-4" vertex="1">
+                    <mxGeometry width="280" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-6" value="&lt;b&gt;&lt;u&gt;id_producto&lt;/u&gt;&lt;/b&gt; : INT  (PK)&lt;br&gt;nombre : VARCHAR&lt;br&gt;descripcion : TEXT&lt;br&gt;precio : DECIMAL&lt;br&gt;categoria : VARCHAR&lt;br&gt;imagen_url : VARCHAR&lt;br&gt;disponible : BOOLEAN&lt;br&gt;es_tendencia : BOOLEAN" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="F4cocLlEntEi2rxBoyh9-4" vertex="1">
+                    <mxGeometry y="34" width="280" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-7" style="group" parent="1" vertex="1">
+                    <mxGeometry x="430" y="460" width="280" height="144" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-8" value="DIRECCION" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#000000;align=center;verticalAlign=middle;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=13;fontStyle=1;" parent="F4cocLlEntEi2rxBoyh9-7" vertex="1">
+                    <mxGeometry width="280" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-9" value="&lt;b&gt;&lt;u&gt;id_direccion&lt;/u&gt;&lt;/b&gt; : INT  (PK)&lt;br&gt;&lt;i&gt;id_usuario&lt;/i&gt; : INT  (FK)&lt;br&gt;direccion_texto : VARCHAR&lt;br&gt;zona : VARCHAR&lt;br&gt;costo_domicilio : DECIMAL" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="F4cocLlEntEi2rxBoyh9-7" vertex="1">
+                    <mxGeometry y="34" width="280" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-10" style="group" parent="1" vertex="1">
+                    <mxGeometry x="930" y="500" width="280" height="204" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-11" value="PEDIDO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#000000;align=center;verticalAlign=middle;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=13;fontStyle=1;" parent="F4cocLlEntEi2rxBoyh9-10" vertex="1">
+                    <mxGeometry width="280" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-12" value="&lt;b&gt;&lt;u&gt;id_pedido&lt;/u&gt;&lt;/b&gt; : INT  (PK)&lt;br&gt;&lt;i&gt;id_usuario&lt;/i&gt; : INT  (FK)&lt;br&gt;&lt;i&gt;id_direccion&lt;/i&gt; : INT  (FK)&lt;br&gt;fecha : DATETIME&lt;br&gt;estado : VARCHAR&lt;br&gt;tipo_entrega : VARCHAR&lt;br&gt;costo_domicilio : DECIMAL&lt;br&gt;total : DECIMAL" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="F4cocLlEntEi2rxBoyh9-10" vertex="1">
+                    <mxGeometry y="34" width="280" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-13" style="group" parent="1" vertex="1">
+                    <mxGeometry x="1450" y="760" width="300" height="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-14" value="DETALLE_PEDIDO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#000000;align=center;verticalAlign=middle;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=13;fontStyle=1;" parent="F4cocLlEntEi2rxBoyh9-13" vertex="1">
+                    <mxGeometry width="300" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-15" value="&lt;b&gt;&lt;u&gt;id_detalle&lt;/u&gt;&lt;/b&gt; : INT  (PK)&lt;br&gt;&lt;i&gt;id_pedido&lt;/i&gt; : INT  (FK)&lt;br&gt;&lt;i&gt;id_producto&lt;/i&gt; : INT  (FK)&lt;br&gt;cantidad : INT&lt;br&gt;precio_unitario : DECIMAL&lt;br&gt;comentario_personalizacion : VARCHAR" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="F4cocLlEntEi2rxBoyh9-13" vertex="1">
+                    <mxGeometry y="34" width="300" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-16" style="group" parent="1" vertex="1">
+                    <mxGeometry x="930" y="860" width="280" height="164" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-17" value="PAGO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#000000;align=center;verticalAlign=middle;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=13;fontStyle=1;" parent="F4cocLlEntEi2rxBoyh9-16" vertex="1">
+                    <mxGeometry width="280" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-18" value="&lt;b&gt;&lt;u&gt;id_pago&lt;/u&gt;&lt;/b&gt; : INT  (PK)&lt;br&gt;&lt;i&gt;id_pedido&lt;/i&gt; : INT  (FK)&lt;br&gt;metodo : VARCHAR&lt;br&gt;estado : VARCHAR&lt;br&gt;monto : DECIMAL&lt;br&gt;fecha : DATETIME" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="F4cocLlEntEi2rxBoyh9-16" vertex="1">
+                    <mxGeometry y="34" width="280" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-19" style="group" parent="1" vertex="1">
+                    <mxGeometry x="430" y="860" width="280" height="184" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-20" value="RESENA" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f0f0f0;strokeColor=#000000;align=center;verticalAlign=middle;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=13;fontStyle=1;" parent="F4cocLlEntEi2rxBoyh9-19" vertex="1">
+                    <mxGeometry width="280" height="34" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-21" value="&lt;b&gt;&lt;u&gt;id_resena&lt;/u&gt;&lt;/b&gt; : INT  (PK)&lt;br&gt;&lt;i&gt;id_usuario&lt;/i&gt; : INT  (FK)&lt;br&gt;&lt;i&gt;id_pedido&lt;/i&gt; : INT (nullable)  (FK)&lt;br&gt;tipo : VARCHAR&lt;br&gt;calificacion : INT&lt;br&gt;comentario : TEXT&lt;br&gt;fecha : DATETIME" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="F4cocLlEntEi2rxBoyh9-19" vertex="1">
+                    <mxGeometry y="34" width="280" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-22" value="realiza" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-1" target="F4cocLlEntEi2rxBoyh9-10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-23" value="guarda" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-1" target="F4cocLlEntEi2rxBoyh9-7" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-24" value="escribe" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-1" target="F4cocLlEntEi2rxBoyh9-19" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-25" value="contiene" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-10" target="F4cocLlEntEi2rxBoyh9-13" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-26" value="incluido_en" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-4" target="F4cocLlEntEi2rxBoyh9-13" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-27" value="genera" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERone;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-10" target="F4cocLlEntEi2rxBoyh9-16" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-28" value="entrega_en" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToMany;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-7" target="F4cocLlEntEi2rxBoyh9-10" edge="1">
+                    <mxGeometry x="-0.1801" y="-2" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="F4cocLlEntEi2rxBoyh9-29" value="recibe" style="edgeStyle=entityRelationEdgeStyle;html=1;startArrow=ERone;startFill=0;endArrow=ERzeroToOne;endFill=0;fontSize=11;rounded=0;" parent="1" source="F4cocLlEntEi2rxBoyh9-10" target="F4cocLlEntEi2rxBoyh9-19" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
