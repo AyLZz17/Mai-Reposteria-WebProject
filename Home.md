@@ -35,9 +35,12 @@ Los mockups ya quedaron validados por el equipo y los stakeholders, por lo que e
 - [Avance 1 del proyecto](../Documentación/avance1_proyecto_reposteria.md)
 - [Tecnologías del proyecto](../Documentación/Tecnologias_para_proyecto.md)
 
+## Actas de reunión
+- [Acta 1 - Qué buscaba la cliente](../../Actas%20Reunion/Acta_01_Que_buscaba_la_cliente.docx)
+- [Acta 2 - Diseño del mockup](../../Actas%20Reunion/Acta_02_Diseno_mockup.docx)
+- [Acta 3 - Herramientas y tecnologías](../../Actas%20Reunion/Acta_03_Herramientas_y_tecnologias.docx)
+- [Acta 4 - Base de datos híbrida](../../Actas%20Reunion/Acta_04_Base_de_datos_hibrida.docx)
+- [Acta 5 - Documentación de diagramas y artefactos](../../Actas%20Reunion/Acta_05_Documentacion_diagramas_y_artefactos.docx)
+
 ## Objetivo del proyecto
 Digitalizar la gestión de pedidos, catálogo, pagos y reseñas para mejorar la operación del negocio y ofrecer una experiencia más profesional a los clientes.
-
-
-## Clone this wiki locally
-- https://github.com/AyLZz17/Mai-Reposteria-WebProject.wiki.git
