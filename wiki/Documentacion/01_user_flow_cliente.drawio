@@ -1,0 +1,232 @@
+<mxfile host="65bd71144e">
+    <diagram name="User Flow - Cliente" id="0">
+        <mxGraphModel dx="1236" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="2680" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="t1" value="User Flow - Cliente (recorrido principal de compra)" style="text;html=1;align=center;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" width="1400" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_start" value="Inicio" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="50" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_1" value="Entrar a la plataforma web" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="420" y="150" width="260" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e1" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_start" target="cf_1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_d1" value="¿Sesión iniciada?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="250" width="200" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e2" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_1" target="cf_d1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_2" value="Iniciar sesión con Google (si es nuevo, se crea el perfil automáticamente)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="260" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e3" value="No" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_d1" target="cf_2" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="380" y="300"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_3" value="Ver menú por categorías y producto en tendencia del mes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="420" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e5" value="Sí" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cf_d1" target="cf_3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_note1" value="En cualquier momento, un cliente autenticado con compras previas puede dejar una reseña general del negocio (visible en la página principal)." style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;dashed=1;" parent="1" vertex="1">
+                    <mxGeometry x="900" y="420" width="300" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e_note" value="" style="endArrow=open;dashed=1;html=1;fontSize=9;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_3" target="cf_note1" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_4" value="Seleccionar producto y agregar al carrito" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="540" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e6" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_3" target="cf_4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_d2" value="¿Agregar más productos?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="640" width="200" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e7" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_4" target="cf_d2" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e8" value="Sí" style="endArrow=block;html=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.9;entryDx=0;entryDy=0;" parent="1" source="cf_d2" target="cf_3" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="320" y="690"/>
+                            <mxPoint x="320" y="490"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_5" value="Escribir comentarios / personalización (opcional): mensaje, sabor, alergias" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="780" width="320" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e9" value="No" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cf_d2" target="cf_5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_6" value="Ir a Checkout" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="890" width="200" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e10" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_5" target="cf_6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_d3" value="¿Tipo de entrega?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="990" width="200" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e11" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_6" target="cf_d3" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_7" value="Ingresar dirección y calcular costo de domicilio según la zona" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="1150" width="300" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e12" value="Domicilio" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cf_d3" target="cf_7" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="240" y="1040"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_8" value="Recoger en el punto de venta (costo de domicilio = $0)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="1150" width="300" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e13" value="Recoger en tienda" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cf_d3" target="cf_8" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="980" y="1040"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_9" value="Ver total: productos + domicilio" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="1280" width="240" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e14" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_7" target="cf_9" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="240" y="1310"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_e15" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_8" target="cf_9" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="980" y="1310"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_10" value="Elegir método de pago: Google Pay / PSE / Tarjeta / Contra entrega" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="1390" width="300" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e16" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_9" target="cf_10" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_d4" value="¿Pago en línea o contra entrega?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="1520" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e17" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_10" target="cf_d4" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_11" value="Procesar pago con la pasarela" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="1690" width="280" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e18" value="Pago en línea" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cf_d4" target="cf_11" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="230" y="1580"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_d5" value="¿Pago aprobado?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="90" y="1800" width="200" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e19" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.364;exitY=0.95;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="cf_11" target="cf_d5" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_12" value="Mostrar mensaje de error de pago" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="350" y="1815" width="260" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e20" value="No" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_d5" target="cf_12" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e21" value="Reintentar" style="endArrow=block;dashed=1;html=1;fontSize=9;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_12" target="cf_10" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="720" y="1850"/>
+                            <mxPoint x="720" y="1430"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_13" value="Pedido pasa a estado &#39;pagado / confirmado&#39;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="1950" width="280" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e22" value="Sí" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cf_d5" target="cf_13" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_14" value="Pedido queda &#39;pendiente de pago&#39; y se envía a preparación" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="830" y="1690" width="300" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e23" value="Contra entrega" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cf_d4" target="cf_14" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="980" y="1575"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_15" value="Guardar pedido y enviar confirmación (correo / SMS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="2090" width="300" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e24" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_13" target="cf_15" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="190" y="2120"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_e25" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="cf_14" target="cf_15" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="980" y="2125"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_16" value="Seguimiento del pedido: en preparación → listo → entregado" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="2200" width="320" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e26" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_15" target="cf_16" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_d6" value="¿Pedido entregado?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="450" y="2310" width="200" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e27" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_16" target="cf_d6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e28" value="Aún no" style="endArrow=block;html=1;fontSize=9;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="cf_d6" target="cf_16" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="950" y="2360"/>
+                            <mxPoint x="950" y="2250"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="cf_17" value="Dejar reseña del pedido (calificación 1-5 + comentario opcional)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;arcSize=8;" parent="1" vertex="1">
+                    <mxGeometry x="390" y="2450" width="320" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e29" value="Sí" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_d6" target="cf_17" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_end" value="Fin" style="ellipse;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="2560" width="160" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="cf_e30" value="" style="endArrow=block;html=1;rounded=0;fontSize=10;labelBackgroundColor=#ffffff;" parent="1" source="cf_17" target="cf_end" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

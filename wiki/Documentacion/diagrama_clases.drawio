@@ -1,0 +1,341 @@
+﻿<mxfile host="65bd71144e" pages="3">
+    <diagram name="Diagrama de Clases - Microservicios" id="microservices">
+        <mxGraphModel dx="3436" dy="2170" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2200" pageHeight="1400" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="Diagrama de Clases - Plataforma Web Sabor a Colores (Microservicios)" style="text;html=1;align=center;fontSize=20;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="-80" width="1800" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg_auth" value="Servicio de Autenticación y Usuarios" style="swimlane;html=1;startSize=24;fillColor=#EAF4FF;strokeColor=#6C8EBF;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="40" y="-40" width="750" height="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="direccion" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Direccion&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- direccionTexto: String&lt;br/&gt;- zona: String&lt;br/&gt;- costoDomicilio: double&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ calcularCostoDomicilio(): double&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_auth" vertex="1">
+                    <mxGeometry x="20" y="260" width="220" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="inherit_admin" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#000000;exitX=0.5;exitY=0.091;exitDx=0;exitDy=0;endFill=0;entryX=0.45;entryY=0.059;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" parent="pkg_auth" source="administrador" target="usuario" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="500" y="30" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="590" y="30"/>
+                            <mxPoint x="110" y="30"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="usuario" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Usuario&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- nombre: String&lt;br/&gt;- correo: String&lt;br/&gt;- fotoPerfil: String&lt;br/&gt;- fechaRegistro: Date&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ iniciarSesion(): void&lt;br/&gt;+ cerrarSesion(): void&lt;br/&gt;+ actualizarPerfil(): void&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_auth" vertex="1">
+                    <mxGeometry x="20" y="50" width="200" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="cliente" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Cliente&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- direcciones: List&lt;Direccion&gt;&lt;br/&gt;- carrito: Carrito&lt;br/&gt;- pedidos: List&lt;Pedido&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ agregarAlCarrito(producto, cantidad): void&lt;br/&gt;+ realizarPedido(): Pedido&lt;br/&gt;+ dejarResena(resena): void&lt;br/&gt;+ verHistorialPedidos(): List&lt;Pedido&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_auth" vertex="1">
+                    <mxGeometry x="250" y="50" width="220" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="administrador" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Administrador&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- cargo: String&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ gestionarMenu(): void&lt;br/&gt;+ gestionarPedidos(): void&lt;br/&gt;+ cambiarProductoTendencia(producto): void&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_auth" vertex="1">
+                    <mxGeometry x="500" y="90" width="180" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="6dVwZTLJHOB1jUL-mzg_-6" style="edgeStyle=none;html=1;entryX=0.75;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=block;endFill=0;exitX=0.045;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="pkg_auth" source="cliente" target="usuario" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="220" y="135" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pedido_direccion" value="" style="endArrow=none;html=1;rounded=0;strokeColor=light-dark(#000000,#959595);exitX=0.119;exitY=0.005;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.455;entryY=0.929;entryDx=0;entryDy=0;entryPerimeter=0;" parent="pkg_auth" target="direccion" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="350" y="510"/>
+                            <mxPoint x="120" y="510"/>
+                        </Array>
+                        <mxPoint x="350.93999999999994" y="580.9500000000003" as="sourcePoint"/>
+                        <mxPoint x="120" y="400" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pedido_direccion_l1" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_direccion" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_direccion_l2" value="0..1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_direccion" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dep_cliente_servicio" value="" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;entryX=0.192;entryY=0.6;entryDx=0;entryDy=0;exitX=0.884;exitY=0.992;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" parent="pkg_auth" target="servicioRecomendacion" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="410.48" y="219.9999999999999" as="sourcePoint"/>
+                        <mxPoint x="1096" y="301.36" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="410" y="421.36"/>
+                            <mxPoint x="1130" y="420"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="pkg_catalog" value="Servicio de Catálogo y Recomendaciones" style="swimlane;html=1;startSize=24;fillColor=#E8F5E9;strokeColor=#82B366;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="820" y="-10" width="560" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="producto" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Producto&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- nombre: String&lt;br/&gt;- descripcion: String&lt;br/&gt;- precio: double&lt;br/&gt;- categoria: CategoriaProducto&lt;br/&gt;- imagenUrl: String&lt;br/&gt;- disponible: boolean&lt;br/&gt;- esTendencia: boolean&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ activar(): void&lt;br/&gt;+ desactivar(): void&lt;br/&gt;+ actualizarPrecio(nuevoPrecio): void&lt;br/&gt;+ marcarComoTendencia(): void&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_catalog" vertex="1">
+                    <mxGeometry x="20" y="40" width="220" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="categoriaProducto" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;«enumeration» CategoriaProducto&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;TORTA&lt;br/&gt;GALLETA&lt;br/&gt;ESPECIAL&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_catalog" vertex="1">
+                    <mxGeometry x="350" y="40" width="140" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="servicioRecomendacion" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;ServicioRecomendacion&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ generarRecomendaciones(cliente): List&lt;Producto&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_catalog" vertex="1">
+                    <mxGeometry x="300" y="170" width="260" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg_orders" value="&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;Servicio de Pedidos" style="swimlane;html=1;startSize=24;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="-20" y="490" width="960" height="520" as="geometry"/>
+                </mxCell>
+                <mxCell id="carrito" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Carrito&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- items: List&lt;ItemCarrito&gt;&lt;br/&gt;- fechaCreacion: Date&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ agregarProducto(producto, cantidad): void&lt;br/&gt;+ quitarProducto(producto): void&lt;br/&gt;+ actualizarCantidad(producto, cantidad): void&lt;br/&gt;+ calcularSubtotal(): double&lt;br/&gt;+ vaciar(): void&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="20" y="40" width="240" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="itemCarrito" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;ItemCarrito&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- cantidad: int&lt;br/&gt;- comentario: String&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ calcularSubtotal(): double&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="20" y="290" width="240" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="pedido" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Pedido&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- fecha: Date&lt;br/&gt;- estado: EstadoPedido&lt;br/&gt;- tipoEntrega: TipoEntrega&lt;br/&gt;- costoDomicilio: double&lt;br/&gt;- total: double&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ calcularTotal(): double&lt;br/&gt;+ cambiarEstado(nuevoEstado): void&lt;br/&gt;+ agregarDetalle(detalle): void&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="320" y="40" width="260" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="detallePedido" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;DetallePedido&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- cantidad: int&lt;br/&gt;- precioUnitario: double&lt;br/&gt;- comentarioPersonalizacion: String&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ calcularSubtotal(): double&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="640" y="40" width="260" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="estadoPedido" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;«enumeration» EstadoPedido&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;PENDIENTE_PAGO&lt;br/&gt;PAGADO&lt;br/&gt;EN_PREPARACION&lt;br/&gt;LISTO&lt;br/&gt;ENTREGADO&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="220" y="270" width="180" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="tipoEntrega" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;«enumeration» TipoEntrega&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;DOMICILIO&lt;br/&gt;RECOGER_EN_TIENDA&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_orders" vertex="1">
+                    <mxGeometry x="430" y="280" width="180" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_pago" value="" style="startArrow=diamondThin;startFill=1;endArrow=none;html=1;rounded=0;strokeColor=#000000;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="pkg_orders" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="540" y="186.79987341772164" as="sourcePoint"/>
+                        <mxPoint x="1300" y="83" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1300" y="187"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pedido_pago_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_pago" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_pago_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_pago" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_carrito_item" value="" style="startArrow=diamondThin;startFill=1;endArrow=none;html=1;rounded=0;strokeColor=#666666;" parent="pkg_orders" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="139.88" y="240" as="sourcePoint"/>
+                        <mxPoint x="139.88" y="300" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_carrito_item_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_carrito_item" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry">
+                        <mxPoint y="16" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_carrito_item_l2" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_carrito_item" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint y="-6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pedido_tipo" value="" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;exitX=0.5;exitY=0.947;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.444;entryY=0.111;entryDx=0;entryDy=0;entryPerimeter=0;" parent="pkg_orders" source="pedido" target="tipoEntrega" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="453.6799999999998" y="229.99999999999955" as="sourcePoint"/>
+                        <mxPoint x="506.3115789473684" y="280.00000000000045" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pedido_tipo_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_tipo" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_tipo_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_tipo" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint x="-9" y="-6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_resenaPedido_pedido" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;entryX=0.846;entryY=0.947;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="pkg_orders" target="pedido" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1420" y="314.69000000000005"/>
+                            <mxPoint x="1420" y="220"/>
+                        </Array>
+                        <mxPoint x="1340" y="314.6900000000005" as="sourcePoint"/>
+                        <mxPoint x="540" y="210" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_resenaPedido_pedido_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_resenaPedido_pedido" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_resenaPedido_pedido_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_resenaPedido_pedido" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg_payments" value="Servicio de Pagos" style="swimlane;html=1;startSize=24;fillColor=#F5E1FF;strokeColor=#B266D6;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="380" width="460" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="pago" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Pago&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- metodo: MetodoPago&lt;br/&gt;- estado: EstadoPago&lt;br/&gt;- monto: double&lt;br/&gt;- fecha: Date&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ procesarPago(): boolean&lt;br/&gt;+ confirmarPago(): void&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_payments" vertex="1">
+                    <mxGeometry x="20" y="40" width="200" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="metodoPago" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;«enumeration» MetodoPago&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;GOOGLE_PAY&lt;br/&gt;PSE&lt;br/&gt;TARJETA&lt;br/&gt;CONTRA_ENTREGA&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_payments" vertex="1">
+                    <mxGeometry x="280" y="40" width="160" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="estadoPago" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;«enumeration» EstadoPago&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;PENDIENTE&lt;br/&gt;APROBADO&lt;br/&gt;RECHAZADO&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_payments" vertex="1">
+                    <mxGeometry x="280" y="190" width="140" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="pkg_reviews" value="Servicio de Reseñas" style="swimlane;html=1;startSize=24;fillColor=#FDE9D9;strokeColor=#C55A11;fontSize=14;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1040" y="740" width="340" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="resena" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;Resena&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- id: String&lt;br/&gt;- calificacion: int&lt;br/&gt;- comentario: String&lt;br/&gt;- fecha: Date&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;+ publicar(): void&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_reviews" vertex="1">
+                    <mxGeometry x="20" y="40" width="180" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="resenaPedido" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;ResenaPedido&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- pedido: Pedido&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_reviews" vertex="1">
+                    <mxGeometry x="220" y="40" width="120" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="resenaGeneral" value="&lt;table cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; style=&quot;border-collapse:collapse;width:100%;font-family:Arial;font-size:12px;&quot;&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;padding:4px 8px;font-weight:bold;background-color:#ffffff;&quot;&gt;ResenaGeneral&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td style=&quot;border:1px solid #000000;border-top:none;padding:4px 8px;&quot;&gt;- tipo: String&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;align=left;verticalAlign=top;spacingLeft=6;spacingTop=4;spacingBottom=4;fontSize=12;" parent="pkg_reviews" vertex="1">
+                    <mxGeometry x="220" y="120" width="100" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_cliente_carrito" value="" style="startArrow=diamondThin;startFill=1;endArrow=none;html=1;rounded=0;strokeColor=#000000;exitX=0.317;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.667;entryY=0.056;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="cliente" target="carrito" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="360" y="360"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_cliente_carrito_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_carrito" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_cliente_carrito_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_carrito" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_cliente_pedido" value="" style="startArrow=diamondThin;startFill=1;endArrow=none;html=1;rounded=0;strokeColor=#000000;entryX=0.462;entryY=0.053;entryDx=0;entryDy=0;exitX=0.589;exitY=1.003;exitDx=0;exitDy=0;exitPerimeter=0;entryPerimeter=0;" parent="1" source="cliente" target="pedido" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="450" y="180" as="sourcePoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_cliente_pedido_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_pedido" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_cliente_pedido_l2" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_pedido" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint y="17" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_cliente_direccion" value="" style="startArrow=diamondThin;startFill=0;endArrow=none;html=1;rounded=0;strokeColor=#000000;entryX=0.818;entryY=0.071;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="cliente" target="direccion" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_cliente_direccion_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_direccion" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry">
+                        <mxPoint x="-6" y="7" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_cliente_direccion_l2" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_direccion" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint x="6" y="-6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pedido_detalle" value="" style="startArrow=diamondThin;startFill=1;endArrow=none;html=1;rounded=0;strokeColor=#000000;exitX=0.846;exitY=0.474;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.038;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="pedido" target="detallePedido" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_detalle_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_detalle" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry">
+                        <mxPoint x="6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pedido_detalle_l2" value="1..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_detalle" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_estado" value="" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;exitX=0.192;exitY=0.947;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.444;entryY=0.077;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="pedido" target="estadoPedido" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_estado_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_estado" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pedido_estado_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pedido_estado" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint y="-15" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_detalle_producto" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;exitX=0.615;exitY=0.067;exitDx=0;exitDy=0;entryX=0.453;entryY=0.992;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" parent="1" source="detallePedido" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="854.9999999999999" y="270" as="targetPoint"/>
+                        <mxPoint x="849.9999999999999" y="521.6999999999998" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_detalle_producto_l1" value="1..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_detalle_producto" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_detalle_producto_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_detalle_producto" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_item_producto" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;entryX=0.833;entryY=1.016;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.646;exitY=0.909;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="itemCarrito" target="producto" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="155" y="940"/>
+                            <mxPoint x="1020" y="940"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_item_producto_l1" value="1..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_item_producto" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_item_producto_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_item_producto" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint y="-94" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_producto_categoria" value="" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;" parent="1" source="producto" target="categoriaProducto" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_producto_categoria_l1" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_producto_categoria" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry">
+                        <mxPoint x="2" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_producto_categoria_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_producto_categoria" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint x="-12" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pago_metodo" value="" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;exitX=0.85;exitY=0.471;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.063;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="pago" target="metodoPago" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pago_metodo_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pago_metodo" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pago_metodo_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pago_metodo" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint x="-16" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_pago_estado" value="" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;exitX=0.85;exitY=0.706;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.071;entryY=0.125;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="pago" target="estadoPago" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pago_estado_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pago_estado" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_pago_estado_l2" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_pago_estado" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint x="-15" y="-6" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="inherit_resena_pedido" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#000000;endFill=0;entryX=0.722;entryY=0.286;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="resenaPedido" target="resena" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inherit_resena_general" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#000000;endFill=0;entryX=0.722;entryY=0.714;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="resenaGeneral" target="resena" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_cliente_resena" value="" style="startArrow=diamondThin;startFill=1;endArrow=none;html=1;rounded=0;strokeColor=#000000;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0.22;entryY=0.071;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="cliente" target="resena" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="510" y="190" as="sourcePoint"/>
+                        <mxPoint x="1100" y="730" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="520" y="450"/>
+                            <mxPoint x="1050" y="450"/>
+                            <mxPoint x="1100" y="450"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_cliente_resena_l1" value="1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_resena" connectable="0" vertex="1">
+                    <mxGeometry x="-0.85" relative="1" as="geometry">
+                        <mxPoint x="-3" y="-66" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_cliente_resena_l2" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontStyle=1;labelBackgroundColor=#ffffff;" parent="assoc_cliente_resena" connectable="0" vertex="1">
+                    <mxGeometry x="0.85" relative="1" as="geometry">
+                        <mxPoint x="-4" y="-215" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="dep_servicio_producto" value="" style="endArrow=open;endFill=0;dashed=1;html=1;rounded=0;strokeColor=#000000;" parent="1" source="servicioRecomendacion" target="producto" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
