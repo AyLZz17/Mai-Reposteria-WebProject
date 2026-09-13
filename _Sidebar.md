@@ -7,3 +7,4 @@
 - [Diagramas](Diagramas)
 - [Interacción con Stakeholders](Stakeholders)
 - [Entregables](Entregables)
+- [Herramientas](Herramientas)

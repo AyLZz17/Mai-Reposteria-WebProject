@@ -1,7 +1,7 @@
 # Requisitos No Funcionales
 
 ## Objetivo
-Definir atributos de calidad y restricciones que deben cumplirse en la solución.
+Definir atributos de calidad y restricciones que deben cumplirse en la solución para garantizar una experiencia segura, útil y sostenible.
 
 ## Requisitos por prioridad
 
@@ -34,3 +34,6 @@ Definir atributos de calidad y restricciones que deben cumplirse en la solución
 - Integridad
 - Escalabilidad
 - Portabilidad
+
+## Observación
+Estos requisitos se usaron como base para orientar el diseño funcional y técnico del proyecto, así como para validar que la propuesta cumpla con expectativas de negocio y calidad.

@@ -1,37 +1,43 @@
-# Wiki del Proyecto – Plataforma Web para Repostería
+# APP Plataforma Web para Repostería
 
-## Bienvenido
-Esta Wiki sirve como documentación central del proyecto para repostería en Ibagué, incluyendo contexto, requisitos, arquitectura, diagramas y entregables para sustentación.
+## Contexto
+Este proyecto busca digitalizar la operación de una repostería en Ibagué, reemplazando el manejo manual por redes sociales y WhatsApp por una plataforma web ordenada, moderna y funcional. La solución está orientada tanto a clientes como a la administradora del negocio.
 
-## Secciones principales
-- [Arquitectura](Arquitectura.md)
-- [Historias de Usuario](Historias-de-Usuario.md)
-- [Requisitos No Funcionales](Requisitos-No-Funcionales.md)
-- [Diagramas](Diagramas.md)
-- [Interacción con Stakeholders](Stakeholders.md)
-- [Entregables](Entregables.md)
+La aplicación permitirá mostrar el menú, gestionar pedidos personalizados, facilitar pagos, ofrecer recomendaciones y dejar reseñas. Además, se contempla una administración centralizada para actualizar productos, promociones y estados de pedido.
+
+## Grupo de trabajo
+
+| Nombre | Código | Rol principal |
+| --- | --- | --- |
+| Laura Ramirez | 222024202006 | Documentación, coordinación del proyecto y desarrollo frontend |
+| Juan Valencia | 0000000000 | Análisis base de datos y soporte en desarrollo backend |
+| Daniel Ayala | 2220251089 | Arquitectura, documentación técnica y desarrollo backend |
+
+## Listado HU
+- [Historias de Usuario](Historias-de-Usuario)
+
+## Diagramas
+- [Diagrama de clases](Diagramas)
+- [Diagrama ER](Diagramas)
+- [Diagrama de secuencia](Diagramas)
+- [User flow cliente](Diagramas)
+- [User flow administradora](Diagramas)
+
+## MockUps
+Los mockups ya quedaron validados por el equipo y los stakeholders, por lo que este punto del proyecto se considera cumplido.
+(POR SUBIR)
+
+
+## Herramientas que se utilizarán
+- [Herramientas](Herramientas)
 
 ## Documentación base
 - [Avance 1 del proyecto](../Documentación/avance1_proyecto_reposteria.md)
 - [Tecnologías del proyecto](../Documentación/Tecnologias_para_proyecto.md)
 
-## Diagramas y recursos
-- [Diagrama de clases](../Documentación/diagrama_clases.drawio)
-- [Diagrama ER](../Documentación/diagrama_ER.drawio)
-- [Diagrama de secuencia](../Documentación/diagrama_secuencia.drawio)
-- [User flow cliente](../Documentación/01_user_flow_cliente.drawio)
-- [User flow administradora](../Documentación/02_user_flow_administradora.drawio)
-
 ## Objetivo del proyecto
 Digitalizar la gestión de pedidos, catálogo, pagos y reseñas para mejorar la operación del negocio y ofrecer una experiencia más profesional a los clientes.
 
-## Estado del proyecto
-La documentación del proyecto ya incluye:
-- contexto y alcance
-- historias de usuario
-- requisitos no funcionales
-- validación con stakeholders
-- diagramas funcionales y de modelado
 
-## Siguiente paso sugerido
-Usar esta Wiki como base para la sustentación final y complementar con diapositivas o un PDF ejecutivo.
+## Clone this wiki locally
+- https://github.com/AyLZz17/Mai-Reposteria-WebProject.wiki.git
