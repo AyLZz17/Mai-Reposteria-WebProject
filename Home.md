@@ -25,7 +25,8 @@ La aplicación permitirá mostrar el menú, gestionar pedidos personalizados, fa
 
 ## MockUps
 Los mockups ya quedaron validados por el equipo y los stakeholders, por lo que este punto del proyecto se considera cumplido.
-(POR SUBIR)
+
+- [Ver mockups](Mockups)
 
 
 ## Herramientas que se utilizarán
