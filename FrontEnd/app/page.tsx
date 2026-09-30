@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import AddToCartButton from "../components/AddToCartButton";
 import { useCart } from "../components/CartProvider";
 
 function BrandLogo() {
@@ -50,7 +51,7 @@ const products = [
 ];
 
 export default function Home() {
-  const { addItem, itemCount } = useCart();
+  const { itemCount } = useCart();
 
   return (
     <div className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
@@ -58,12 +59,18 @@ export default function Home() {
         <header className="border-b border-[#d8c5b4] bg-[linear-gradient(135deg,#f5efe7_0%,#f0e3d5_48%,#e0c7ac_100%)]">
           <div className="mx-auto max-w-[1500px] px-6 py-7">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div className="leading-none text-[#6d4c3a]">
-                <div className="text-[2.8rem] font-normal tracking-[-0.06em] lg:text-[5rem]">
-                  MAI
+              <div className="flex items-center gap-4 leading-none text-[#6d4c3a]">
+                <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border-[6px] border-[#d8c5b4] bg-[#f1e8df] shadow-[0_12px_26px_rgba(126,86,64,0.18)] lg:h-24 lg:w-24">
+                  <Image
+                    src="/images/brand/logo.svg"
+                    alt="Logo Mai Reposteria"
+                    width={120}
+                    height={120}
+                    className="h-full w-full object-cover"
+                  />
                 </div>
-                <div className="mt-1 text-[0.85rem] uppercase tracking-[0.28em] lg:text-[1.1rem]">
-                  REPOSTERIA
+                <div className="text-[1.8rem] font-medium tracking-[0.12em] lg:text-[3.2rem]">
+                  MAI REPOSTERIA
                 </div>
               </div>
 
@@ -165,21 +172,16 @@ export default function Home() {
                     <div className="mt-4 text-[1.7rem] italic text-[#6d4c3a]">{product.price}</div>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() =>
-                      addItem({
-                        id: product.name,
-                        name: product.name,
-                        price: Number(product.price.replace(/\D/g, '')),
-                        image: product.image,
-                        position: product.position,
-                      })
-                    }
-                    className="mt-6 w-full rounded-xl border border-[#b6926d] bg-[#d9bcae] px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.24em] text-[#fefaf4] shadow-[0_8px_18px_rgba(181,149,120,0.35)] transition-all hover:-translate-y-0.5 hover:bg-[#cba487]"
-                  >
-                    ADD TO CART
-                  </button>
+                  <AddToCartButton
+                    product={{
+                      id: product.name,
+                      name: product.name,
+                      price: Number(product.price.replace(/\D/g, '')),
+                      image: product.image,
+                      position: product.position,
+                    }}
+                    className="w-full rounded-xl border border-[#b6926d] bg-[#d9bcae] px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.24em] text-[#fefaf4] shadow-[0_8px_18px_rgba(181,149,120,0.35)] transition-all hover:-translate-y-0.5 hover:bg-[#cba487]"
+                  />
                 </div>
               </article>
             ))}
@@ -245,7 +247,7 @@ export default function Home() {
                   >
                     Preferencias de cookies
                   </button>
-                  <span>© 2026 Mai Reposteria, Inc. Todos los derechos reservados.</span>
+                  <span>© 2026 Mai Reposteria. Todos los derechos reservados.</span>
                 </div>
 
                 <a href="#" className="flex items-center gap-2 self-start text-[#f5efe7] md:self-auto">

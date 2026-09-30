@@ -89,12 +89,12 @@ export default function CartPage() {
                     </div>
 
                     <div className="flex flex-wrap items-end justify-between gap-4">
-                      <div className="flex items-center rounded-full border border-[#c9a486] bg-[#f3e7dc]">
+                      <div className="flex shrink-0 items-center overflow-hidden rounded-full border border-[#c9a486] bg-[#f3e7dc]">
                         <button
                           type="button"
                           onClick={() => decreaseItem(item.id)}
                           aria-label={`Reducir cantidad de ${item.name}`}
-                          className="flex h-9 w-9 items-center justify-center text-lg text-[#6d4c3a] transition hover:bg-[#ead7c2]"
+                          className="flex h-9 w-9 shrink-0 items-center justify-center text-lg text-[#6d4c3a] transition hover:bg-[#ead7c2]"
                         >
                           −
                         </button>
@@ -103,7 +103,7 @@ export default function CartPage() {
                           type="button"
                           onClick={() => addItem(item)}
                           aria-label={`Aumentar cantidad de ${item.name}`}
-                          className="flex h-9 w-9 items-center justify-center text-lg text-[#6d4c3a] transition hover:bg-[#ead7c2]"
+                          className="flex h-9 w-9 shrink-0 items-center justify-center text-lg text-[#6d4c3a] transition hover:bg-[#ead7c2]"
                         >
                           +
                         </button>
