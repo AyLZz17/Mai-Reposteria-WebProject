@@ -20,13 +20,17 @@ Archivos de gobierno: `AGENTS.md` (reglas permanentes) · `SKILLS.md` (habilidad
 
 - **Java & Framework:** Java 21 LTS (Amazon Corretto), Spring Boot 4.1.x.
 - **Microservicio Identity/Users:** `Services/users-service` (puerto 8081).
-- **Base de datos:** PostgreSQL (`mai_users_service`), migraciones gestionadas con Flyway en modo baseline.
+- **Base de datos:** PostgreSQL (`mai_users_service`), migraciones con Flyway baseline.
 - **Estructura por capas:**
-  - `domain.entity`: Entidades JPA alineadas al esquema SQL (UUID como ID, OffsetDateTime con zona horaria UTC).
-  - `domain.repository`: Interfaces `JpaRepository`.
-  - `domain.service`: Servicios transaccionales y lógica de negocio.
-  - `api.dto`: `record` inmutables con validación Jakarta (no exponer entidades en la API).
-  - `api.controller`: Controladores `@RestController` con prefijo `/api/v1/...`.
-  - `api.exception`: Manejador centralizado `@RestControllerAdvice` con respuestas JSON estructuradas.
-  - `infrastructure.config`: Configuraciones de Spring (Security stateless, Beans de PasswordEncoder BCrypt).
+  - `domain.entity`: `User`, `Role`, `RefreshToken` (UUID, OffsetDateTime UTC).
+  - `domain.repository`: `UserRepository`, `RoleRepository`, `RefreshTokenRepository`.
+  - `domain.service`: `UserService`, `AuthService`.
+  - `api.dto`: records inmutables (`LoginRequest`, `AuthResponse`, `RefreshTokenRequest`, `GoogleLoginRequest`, `RegisterUserRequest`, `UserResponse`).
+  - `api.controller`: `AuthController` (`/api/v1/auth`), `UserController` (`/api/v1/users`).
+  - `api.exception`: `GlobalExceptionHandler` centralizado.
+  - `infrastructure.config`: `SecurityConfig` (stateless, BCrypt, filtro JWT).
+  - `infrastructure.security`: `JwtService` (JJWT HMAC-SHA256), `JwtAuthenticationFilter`, `GoogleAuthService` (Google OAuth 2.0).
+- **Mecanismo de Autenticación:**
+  - JWT Access Token (15 min) + Refresh Token (7 días) con rotación y almacenamiento de hash SHA-256 en BD.
+  - Login con Google mediante validación de Google ID Token (auto-registro con rol `CLIENTE`).
 - **API Gateway:** Se desarrollará en un repositorio independiente antes del merge final del backend.

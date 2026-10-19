@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.maireposteria.users.domain.entity.User;
+import com.maireposteria.users.domain.repository.RoleRepository;
 import com.maireposteria.users.domain.repository.UserRepository;
 
 /**
@@ -22,16 +23,18 @@ import com.maireposteria.users.domain.repository.UserRepository;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // Spring inyecta UserRepository y PasswordEncoder automáticamente
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    // Spring inyecta dependencias automáticamente
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     /**
-     * Registra un nuevo usuario en la base de datos con contraseña hasheada.
+     * Registra un nuevo usuario en la base de datos con contraseña hasheada y rol CLIENTE.
      * Verifica primero que el email no esté ya registrado.
      *
      * @param email     Correo electrónico único.
@@ -51,6 +54,9 @@ public class UserService {
         if (password != null && !password.isBlank()) {
             newUser.setPasswordHash(passwordEncoder.encode(password));
         }
+
+        // Asignar rol por defecto CLIENTE si existe
+        roleRepository.findByName("CLIENTE").ifPresent(newUser::addRole);
 
         return userRepository.save(newUser);
     }

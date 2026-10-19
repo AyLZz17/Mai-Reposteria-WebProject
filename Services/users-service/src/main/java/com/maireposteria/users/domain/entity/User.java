@@ -1,6 +1,8 @@
 package com.maireposteria.users.domain.entity;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,8 +11,12 @@ import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -102,7 +108,6 @@ public class User {
      * Fecha de creación. Hibernate la llena automáticamente al insertar
      * (equivalente al trigger updated_at de PostgreSQL, pero del lado Java).
      */
-    @NotNull
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
@@ -111,10 +116,17 @@ public class User {
      * Fecha de última modificación. Hibernate la actualiza automáticamente
      * en cada UPDATE, igual que el trigger de PostgreSQL.
      */
-    @NotNull
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     // =========================================================
     // CONSTRUCTORES
@@ -225,6 +237,18 @@ public class User {
 
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
     // =========================================================
