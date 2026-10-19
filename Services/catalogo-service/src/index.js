@@ -6,9 +6,13 @@ const rateLimit = require('express-rate-limit');
 
 const catalogRoutes = require('./routes/catalog.routes');
 const db = require('./db');
+const { connectToCache } = require('./cache');
 
 const app = express();
 const PORT = process.env.PORT || 8082;
+
+// Conectar caché Redis (resiliente, si no está activo sigue con PostgreSQL)
+connectToCache();
 
 // Seguridad y Middlewares
 app.use(helmet());

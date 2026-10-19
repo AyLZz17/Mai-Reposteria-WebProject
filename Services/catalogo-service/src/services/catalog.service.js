@@ -1,7 +1,8 @@
 const db = require('../db');
+const cache = require('../cache');
 
 /**
- * Servicio de negocio para el catálogo (Categorías y Productos).
+ * Servicio de negocio para el catálogo con soporte de caché en Redis.
  */
 class CatalogService {
   // ============================================
@@ -9,16 +10,29 @@ class CatalogService {
   // ============================================
 
   async getAllCategories(includeInactive = false) {
+    const cacheKey = `categories:${includeInactive ? 'all' : 'active'}`;
+    const cached = await cache.getCached(cacheKey);
+    if (cached) return cached;
+
     const query = includeInactive
       ? 'SELECT * FROM categories ORDER BY name ASC'
       : 'SELECT * FROM categories WHERE is_active = TRUE ORDER BY name ASC';
     const result = await db.query(query);
+
+    await cache.setCached(cacheKey, result.rows, 300); // 5 min
     return result.rows;
   }
 
   async getCategoryById(id) {
+    const cacheKey = `category:${id}`;
+    const cached = await cache.getCached(cacheKey);
+    if (cached) return cached;
+
     const result = await db.query('SELECT * FROM categories WHERE id = $1', [id]);
-    return result.rows[0] || null;
+    const category = result.rows[0] || null;
+
+    if (category) await cache.setCached(cacheKey, category, 300);
+    return category;
   }
 
   async createCategory({ name, slug, description, image_url }) {
@@ -28,6 +42,7 @@ class CatalogService {
       RETURNING *
     `;
     const result = await db.query(query, [name, slug, description || null, image_url || null]);
+    await cache.invalidatePattern('categories:*');
     return result.rows[0];
   }
 
@@ -36,6 +51,10 @@ class CatalogService {
   // ============================================
 
   async getAllProducts({ category_id, is_active = true, limit = 50, offset = 0 } = {}) {
+    const cacheKey = `products:${category_id || 'all'}:${is_active}:${limit}:${offset}`;
+    const cached = await cache.getCached(cacheKey);
+    if (cached) return cached;
+
     const values = [];
     let query = `
       SELECT p.*, c.name AS category_name, c.slug AS category_slug
@@ -61,10 +80,15 @@ class CatalogService {
     query += ` OFFSET $${values.length}`;
 
     const result = await db.query(query, values);
+    await cache.setCached(cacheKey, result.rows, 120); // 2 min
     return result.rows;
   }
 
   async getProductById(id) {
+    const cacheKey = `product:id:${id}`;
+    const cached = await cache.getCached(cacheKey);
+    if (cached) return cached;
+
     const query = `
       SELECT p.*, c.name AS category_name, c.slug AS category_slug
       FROM products p
@@ -81,10 +105,15 @@ class CatalogService {
     const customResult = await db.query(customQuery, [id]);
     product.customizations = customResult.rows;
 
+    await cache.setCached(cacheKey, product, 180);
     return product;
   }
 
   async getProductBySlug(slug) {
+    const cacheKey = `product:slug:${slug}`;
+    const cached = await cache.getCached(cacheKey);
+    if (cached) return cached;
+
     const query = `
       SELECT p.*, c.name AS category_name, c.slug AS category_slug
       FROM products p
@@ -99,6 +128,7 @@ class CatalogService {
     const customResult = await db.query(customQuery, [product.id]);
     product.customizations = customResult.rows;
 
+    await cache.setCached(cacheKey, product, 180);
     return product;
   }
 
@@ -133,6 +163,7 @@ class CatalogService {
       is_customizable,
     ];
     const result = await db.query(query, values);
+    await cache.invalidatePattern('products:*');
     return result.rows[0];
   }
 
@@ -171,7 +202,14 @@ class CatalogService {
     `;
 
     const result = await db.query(query, values);
-    return result.rows[0] || null;
+    const updated = result.rows[0] || null;
+
+    // Invalidar cachés
+    await cache.invalidatePattern('products:*');
+    await cache.invalidatePattern(`product:id:${id}`);
+    if (updated?.slug) await cache.invalidatePattern(`product:slug:${updated.slug}`);
+
+    return updated;
   }
 
   async addCustomization(productId, { name, options, required = false }) {
@@ -186,6 +224,8 @@ class CatalogService {
       JSON.stringify(options || []),
       required,
     ]);
+
+    await cache.invalidatePattern(`product:id:${productId}`);
     return result.rows[0];
   }
 }
