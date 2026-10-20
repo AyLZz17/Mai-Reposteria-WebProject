@@ -26,7 +26,7 @@
 # Variables de entorno y secretos
 .env
 .env.*
-!.env.example
+.env.example
 **/.env
 **/.env.*
 !**/.env.example
