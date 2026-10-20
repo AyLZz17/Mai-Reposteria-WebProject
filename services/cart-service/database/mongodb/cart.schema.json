@@ -1,0 +1,103 @@
+{
+  "$jsonSchema": {
+    "bsonType": "object",
+    "required": ["userId", "items", "createdAt", "updatedAt"],
+    "properties": {
+      "_id": {
+        "bsonType": "objectId",
+        "description": "ID único del carrito"
+      },
+      "userId": {
+        "bsonType": "string",
+        "description": "ID del usuario propietario del carrito (referencia a users-service)"
+      },
+      "sessionId": {
+        "bsonType": "string",
+        "description": "ID de sesión para carritos de usuarios no autenticados"
+      },
+      "items": {
+        "bsonType": "array",
+        "description": "Lista de productos en el carrito",
+        "items": {
+          "bsonType": "object",
+          "required": ["productId", "name", "quantity", "unitPrice", "subtotal"],
+          "properties": {
+            "productId": {
+              "bsonType": "string",
+              "description": "ID del producto (referencia a catálogo)"
+            },
+            "name": {
+              "bsonType": "string",
+              "description": "Nombre del producto"
+            },
+            "quantity": {
+              "bsonType": "int",
+              "minimum": 1,
+              "description": "Cantidad del producto"
+            },
+            "unitPrice": {
+              "bsonType": "double",
+              "minimum": 0,
+              "description": "Precio unitario del producto"
+            },
+            "subtotal": {
+              "bsonType": "double",
+              "minimum": 0,
+              "description": "Subtotal (quantity * unitPrice)"
+            },
+            "imageUrl": {
+              "bsonType": "string",
+              "description": "URL de la imagen del producto"
+            },
+            "notes": {
+              "bsonType": "string",
+              "description": "Notas o instrucciones especiales para este producto"
+            },
+            "addedAt": {
+              "bsonType": "date",
+              "description": "Fecha de agregado al carrito"
+            }
+          }
+        }
+      },
+      "totalItems": {
+        "bsonType": "int",
+        "description": "Total de unidades en el carrito"
+      },
+      "subtotal": {
+        "bsonType": "double",
+        "description": "Subtotal del carrito"
+      },
+      "discount": {
+        "bsonType": "double",
+        "description": "Descuento aplicado"
+      },
+      "total": {
+        "bsonType": "double",
+        "description": "Total final del carrito"
+      },
+      "currency": {
+        "bsonType": "string",
+        "enum": ["COP", "USD"],
+        "description": "Moneda del carrito"
+      },
+      "status": {
+        "bsonType": "string",
+        "enum": ["active", "abandoned", "converted", "expired"],
+        "description": "Estado del carrito"
+      },
+      "expiresAt": {
+        "bsonType": "date",
+        "description": "Fecha de expiración del carrito"
+      },
+      "createdAt": {
+        "bsonType": "date",
+        "description": "Fecha de creación"
+      },
+      "updatedAt": {
+        "bsonType": "date",
+        "description": "Fecha de última actualización"
+      }
+    }
+  }
+}

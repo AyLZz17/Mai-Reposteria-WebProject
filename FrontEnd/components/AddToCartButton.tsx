@@ -6,9 +6,10 @@ import { useCart, type CartProduct } from './CartProvider';
 type AddToCartButtonProps = {
   product: CartProduct;
   className: string;
+  label?: string;
 };
 
-export default function AddToCartButton({ product, className }: AddToCartButtonProps) {
+export default function AddToCartButton({ product, className, label = 'ADD TO CART' }: AddToCartButtonProps) {
   const { addItem } = useCart();
   const [isAdded, setIsAdded] = useState(false);
 
@@ -39,7 +40,7 @@ export default function AddToCartButton({ product, className }: AddToCartButtonP
         onClick={handleAdd}
         className={`${className} ${isAdded ? 'cart-add-pop bg-[#b67f58]' : ''}`}
       >
-        {isAdded ? 'AÑADIDO' : 'ADD TO CART'}
+        {isAdded ? 'AÑADIDO' : label}
       </button>
     </div>
   );

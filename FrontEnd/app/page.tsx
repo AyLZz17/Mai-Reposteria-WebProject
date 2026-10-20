@@ -1,9 +1,13 @@
 'use client';
 
 import Image from "next/image";
+import * as React from "react";
 import Link from "next/link";
 import AddToCartButton from "../components/AddToCartButton";
 import { useCart } from "../components/CartProvider";
+import UserNav from "../components/UserNav";
+import { useAuth } from "../context/AuthContext";
+import { CatalogProduct, getStorefront, StorefrontSettings } from "../lib/api";
 
 function BrandLogo() {
   return (
@@ -19,7 +23,7 @@ function BrandLogo() {
   );
 }
 
-const products = [
+const fallbackProducts = [
   {
     name: "Caja de Alfajores",
     price: "$15.000",
@@ -52,6 +56,12 @@ const products = [
 
 export default function Home() {
   const { itemCount } = useCart();
+  const { user } = useAuth();
+  const isAdmin = user?.roles?.some((role) => role === "ADMIN" || role === "SUPER_ADMIN");
+  const [storefront, setStorefront] = React.useState<{ settings: StorefrontSettings; products: CatalogProduct[] } | null>(null);
+  React.useEffect(() => { void getStorefront().then(setStorefront).catch(() => undefined); }, []);
+  const settings = storefront?.settings;
+  const products = storefront?.products?.length ? storefront.products : fallbackProducts;
 
   return (
     <div className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
@@ -89,6 +99,7 @@ export default function Home() {
                     {item.label}
                   </a>
                 ))}
+                {isAdmin && <Link href="/admin" className="font-bold text-[#924d3e] transition-opacity hover:opacity-70">ADMIN</Link>}
 
                 <div className="flex items-center gap-3 pl-2">
                   <button
@@ -98,13 +109,7 @@ export default function Home() {
                   >
                     ⌕
                   </button>
-                  <button
-                    type="button"
-                    aria-label="Perfil"
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-[#b38d6a] bg-[linear-gradient(135deg,#f8f2eb_0%,#f0e4d7_100%)] text-xl text-[#6d4c3a] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_6px_14px_rgba(123,92,71,0.16)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#f8f2eb_0%,#ead7c0_100%)]"
-                  >
-                    👤
-                  </button>
+                  <UserNav />
                   <Link
                     href="/cart"
                     aria-label="Carrito"
@@ -124,22 +129,22 @@ export default function Home() {
         </header>
 
         <main className="mx-auto max-w-[1500px] px-6 pb-16">
-          <section className="relative mt-8 overflow-hidden border-y border-[#d8c5b4] bg-[#d9bcae]" style={{ backgroundImage: "linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.15)), url('/images/banner/Diseño%20sin%20título.svg')", backgroundSize: 'cover', backgroundPosition: 'center top' }}>
+          <section className="relative mt-8 overflow-hidden border-y border-[#d8c5b4] bg-[#d9bcae]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.15)), url('${settings?.hero_background_url || "/images/banner/Diseño%20sin%20título.svg"}')`, backgroundSize: 'cover', backgroundPosition: 'center top' }}>
             <div className="absolute inset-0 bg-[#d9bcae]/70" />
 
             <div className="relative flex flex-col items-center justify-center gap-6 py-10 lg:py-16">
               <div className="flex items-center justify-center">
-                <BrandLogo />
+                <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-[10px] border-[#a7725a] shadow-[0_12px_26px_rgba(126,86,64,0.25)]"><img src={settings?.hero_logo_url || "/images/brand/logo.svg"} alt="Logo Mai Reposteria" className="h-full w-full object-cover" /></div>
               </div>
 
-              <h2 className="text-center text-[2.5rem] leading-none italic text-[#f5eee7] drop-shadow-[0_4px_12px_rgba(104,72,53,0.26)] lg:text-[5.5rem]">
-                New Product
+              <h2 className="text-center text-[2.5rem] leading-none italic drop-shadow-[0_4px_12px_rgba(104,72,53,0.26)] lg:text-[5.5rem]" style={{ color: settings?.hero_title_color || "#f5eee7" }}>
+                {settings?.hero_title || "New Product"}
               </h2>
             </div>
           </section>
 
           <section className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {products.map((product) => (
+            {products.map((product: any) => (
               <article
                 key={product.name}
                 className="group flex min-h-full flex-col rounded-[1.75rem] border border-[#d7c3af] bg-[#f5efe6] p-4 shadow-[0_18px_34px_rgba(136,97,69,0.12)]"
@@ -147,10 +152,10 @@ export default function Home() {
                 <div className="overflow-hidden rounded-[1.5rem] bg-[#efe2d4]">
                   <div className="h-[320px] w-full overflow-hidden">
                     <img
-                      src={product.image}
+                      src={product.main_image_url || product.image || "/images/products/galletas-chocolate.svg"}
                       alt={product.name}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      style={{ objectPosition: product.position }}
+                      style={{ objectPosition: product.image_position || ("position" in product ? product.position : "50% 50%") }}
                     />
                   </div>
                 </div>
@@ -160,7 +165,7 @@ export default function Home() {
                     <h3 className="text-[1.9rem] italic text-[#6d4c3a]">{product.name}</h3>
 
                     <div className="mt-4 flex items-center justify-center gap-3">
-                      {product.colors.map((color) => (
+                      {(product.display_colors || ("colors" in product ? product.colors : [])).map((color: string) => (
                         <span
                           key={color}
                           className="h-5 w-5 rounded-full border border-[#b88f71]"
@@ -169,18 +174,19 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <div className="mt-4 text-[1.7rem] italic text-[#6d4c3a]">{product.price}</div>
+                    <div className="mt-4 text-[1.7rem] italic text-[#6d4c3a]">{typeof product.price === "number" ? `$${product.price.toLocaleString("es-CO")}` : product.price}</div>
                   </div>
 
                   <AddToCartButton
                     product={{
                       id: product.name,
                       name: product.name,
-                      price: Number(product.price.replace(/\D/g, '')),
-                      image: product.image,
-                      position: product.position,
+                      price: Number(String(product.price).replace(/\D/g, '')),
+                      image: "main_image_url" in product ? product.main_image_url || "" : product.image,
+                      position: "image_position" in product ? product.image_position : product.position,
                     }}
                     className="w-full rounded-xl border border-[#b6926d] bg-[#d9bcae] px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.24em] text-[#fefaf4] shadow-[0_8px_18px_rgba(181,149,120,0.35)] transition-all hover:-translate-y-0.5 hover:bg-[#cba487]"
+                    label={settings?.card_button_label || "ADD TO CART"}
                   />
                 </div>
               </article>
@@ -204,23 +210,23 @@ export default function Home() {
 
               <div className="grid flex-1 grid-cols-2 gap-4 text-sm md:grid-cols-3 xl:grid-cols-6">
                 {[
-                  'MENÚ',
-                  'PEDIDOS PERSONALIZADOS',
-                  'PAGOS',
-                  'ENVÍOS',
-                  'RESEÑAS',
-                  'CONTACTO',
-                  'POLÍTICA DE PRIVACIDAD',
-                  'TÉRMINOS Y CONDICIONES',
-                  'AYUDA',
+                  { label: 'MENÚ', href: '/shop' },
+                  { label: 'PEDIDOS PERSONALIZADOS', href: '#' },
+                  { label: 'PAGOS', href: '#' },
+                  { label: 'ENVÍOS', href: '#' },
+                  { label: 'RESEÑAS', href: '#' },
+                  { label: 'CONTACTO', href: '#' },
+                  { label: 'POLÍTICA DE PRIVACIDAD', href: '/politica-de-privacidad' },
+                  { label: 'TÉRMINOS Y CONDICIONES', href: '/terminos-y-condiciones' },
+                  { label: 'AYUDA', href: '#' },
                 ].map((item) => (
-                  <a
-                    key={item}
-                    href="#"
+                  <Link
+                    key={item.label}
+                    href={item.href}
                     className="text-[#f5efe7]/90 transition-colors hover:text-[#e4c7af]"
                   >
-                    {item}
-                  </a>
+                    {item.label}
+                  </Link>
                 ))}
               </div>
 

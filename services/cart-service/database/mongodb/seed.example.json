@@ -1,0 +1,37 @@
+[
+  {
+    "_id": { "$oid": "657123456789abcdef012345" },
+    "userId": "user_001",
+    "items": [
+      {
+        "productId": "prod_001",
+        "name": "Torta de Chocolate",
+        "quantity": 1,
+        "unitPrice": 35000.00,
+        "subtotal": 35000.00,
+        "imageUrl": "https://example.com/images/torta-chocolate.jpg",
+        "notes": "Sin azúcar, decoración sencilla",
+        "addedAt": { "$date": "2026-10-18T10:30:00Z" }
+      },
+      {
+        "productId": "prod_002",
+        "name": "Cupcakes x6",
+        "quantity": 2,
+        "unitPrice": 18000.00,
+        "subtotal": 36000.00,
+        "imageUrl": "https://example.com/images/cupcakes.jpg",
+        "notes": "",
+        "addedAt": { "$date": "2026-10-18T10:35:00Z" }
+      }
+    ],
+    "totalItems": 3,
+    "subtotal": 71000.00,
+    "discount": 0.00,
+    "total": 71000.00,
+    "currency": "COP",
+    "status": "active",
+    "expiresAt": { "$date": "2026-10-25T10:30:00Z" },
+    "createdAt": { "$date": "2026-10-18T10:30:00Z" },
+    "updatedAt": { "$date": "2026-10-18T10:35:00Z" }
+  }
+]
