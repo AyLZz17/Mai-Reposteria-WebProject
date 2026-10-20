@@ -13,7 +13,9 @@ const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
+if (process.env.ENABLE_CORS !== 'false') {
+  app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
+}
 app.use(rateLimit({ windowMs: 60 * 1000, limit: 100, standardHeaders: 'draft-8', legacyHeaders: false }));
 app.use(cartRoutes);
 

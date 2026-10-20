@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders;
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -18,6 +19,7 @@ public class SecurityConfig {
         http.csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(cors -> {})
                 .authorizeExchange(exchanges -> {
+                    exchanges.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     exchanges.pathMatchers("/actuator/health/**", "/fallback/**").permitAll();
                     if (issuerUri == null || issuerUri.isBlank()) {
                         exchanges.anyExchange().permitAll();

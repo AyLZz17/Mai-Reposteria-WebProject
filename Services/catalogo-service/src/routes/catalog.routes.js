@@ -7,6 +7,23 @@ const { requireAuth, requireAdmin } = require('../middleware/auth');
 // RUTAS DE CATEGORÍAS
 // ============================================
 
+// Configuración pública de la sección destacada de la portada
+router.get('/storefront', async (req, res, next) => {
+  try {
+    res.json(await catalogService.getStorefront());
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch('/storefront', requireAuth, requireAdmin, async (req, res, next) => {
+  try {
+    res.json(await catalogService.updateStorefront(req.body));
+  } catch (err) {
+    next(err);
+  }
+});
+
 // Listar todas las categorías
 router.get('/categories', async (req, res, next) => {
   try {
@@ -48,6 +65,33 @@ router.post('/categories', requireAuth, requireAdmin, async (req, res, next) => 
   }
 });
 
+router.patch('/categories/:id', requireAuth, requireAdmin, async (req, res, next) => {
+  try {
+    const category = await catalogService.updateCategory(req.params.id, req.body);
+    if (!category) return res.status(404).json({ error: 'Categoría no encontrada' });
+    res.json(category);
+  } catch (err) {
+    if (err.code === '23505') return res.status(409).json({ error: 'Ya existe una categoría con ese nombre o slug' });
+    next(err);
+  }
+});
+
+router.delete('/categories/:id', requireAuth, requireAdmin, async (req, res, next) => {
+  try {
+    const category = await catalogService.deleteCategory(req.params.id);
+    if (!category) return res.status(404).json({ error: 'Categoría no encontrada' });
+    res.json(category);
+  } catch (err) { next(err); }
+});
+
+router.delete('/categories/:id/permanent', requireAuth, requireAdmin, async (req, res, next) => {
+  try {
+    const category = await catalogService.permanentlyDeleteCategory(req.params.id);
+    if (!category) return res.status(404).json({ error: 'Categoría no encontrada' });
+    res.status(204).send();
+  } catch (err) { next(err); }
+});
+
 // ============================================
 // RUTAS DE PRODUCTOS
 // ============================================
@@ -56,9 +100,12 @@ router.post('/categories', requireAuth, requireAdmin, async (req, res, next) => 
 router.get('/products', async (req, res, next) => {
   try {
     const { category_id, is_active, limit, offset } = req.query;
+    const activeFilter = is_active === 'all' || is_active === undefined
+      ? (is_active === undefined ? true : null)
+      : is_active === 'true';
     const products = await catalogService.getAllProducts({
       category_id,
-      is_active: is_active !== undefined ? is_active === 'true' : true,
+      is_active: activeFilter,
       limit: limit ? parseInt(limit, 10) : 50,
       offset: offset ? parseInt(offset, 10) : 0,
     });
@@ -107,6 +154,10 @@ router.post('/products', requireAuth, requireAdmin, async (req, res, next) => {
       main_image_url,
       images,
       is_customizable,
+        is_featured,
+        display_order,
+        display_colors,
+        image_position,
     } = req.body;
 
     if (!name || !slug || price === undefined) {
@@ -123,6 +174,10 @@ router.post('/products', requireAuth, requireAdmin, async (req, res, next) => {
       main_image_url,
       images,
       is_customizable: Boolean(is_customizable),
+      is_featured: Boolean(is_featured),
+      display_order: Number.isFinite(Number(display_order)) ? Number(display_order) : 0,
+      display_colors: Array.isArray(display_colors) ? display_colors : [],
+      image_position: image_position || '50% 50%',
     });
 
     res.status(201).json(newProduct);
@@ -145,6 +200,22 @@ router.patch('/products/:id', requireAuth, requireAdmin, async (req, res, next) 
   } catch (err) {
     next(err);
   }
+});
+
+router.delete('/products/:id', requireAuth, requireAdmin, async (req, res, next) => {
+  try {
+    const product = await catalogService.deleteProduct(req.params.id);
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+    res.json(product);
+  } catch (err) { next(err); }
+});
+
+router.delete('/products/:id/permanent', requireAuth, requireAdmin, async (req, res, next) => {
+  try {
+    const product = await catalogService.permanentlyDeleteProduct(req.params.id);
+    if (!product) return res.status(404).json({ error: 'Producto no encontrado' });
+    res.status(204).send();
+  } catch (err) { next(err); }
 });
 
 // Agregar opciones de personalización a un producto

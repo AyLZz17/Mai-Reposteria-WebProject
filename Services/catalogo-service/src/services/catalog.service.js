@@ -5,6 +5,66 @@ const cache = require('../cache');
  * Servicio de negocio para el catálogo con soporte de caché en Redis.
  */
 class CatalogService {
+  async ensureStorefrontSchema() {
+    // La imagen del proyecto monta el esquema solo al crear el volumen por primera vez.
+    // Estas sentencias permiten actualizar instalaciones existentes sin perder datos.
+    await db.query(`
+      ALTER TABLE products
+        ADD COLUMN IF NOT EXISTS is_featured BOOLEAN NOT NULL DEFAULT FALSE,
+        ADD COLUMN IF NOT EXISTS display_order INT NOT NULL DEFAULT 0,
+        ADD COLUMN IF NOT EXISTS display_colors TEXT[] NOT NULL DEFAULT '{}',
+        ADD COLUMN IF NOT EXISTS image_position VARCHAR(50) NOT NULL DEFAULT '50% 50%'
+    `);
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS storefront_settings (
+        id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+        hero_title VARCHAR(150) NOT NULL DEFAULT 'New Product',
+        hero_background_url TEXT NOT NULL DEFAULT '/images/banner/Diseño sin título.svg',
+        hero_logo_url TEXT NOT NULL DEFAULT '/images/brand/logo.svg',
+        hero_overlay_color VARCHAR(30) NOT NULL DEFAULT '#d9bcae',
+        hero_title_color VARCHAR(30) NOT NULL DEFAULT '#f5eee7',
+        card_button_label VARCHAR(80) NOT NULL DEFAULT 'ADD TO CART',
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    await db.query('INSERT INTO storefront_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING');
+  }
+
+  async getStorefront() {
+    const settingsResult = await db.query('SELECT * FROM storefront_settings WHERE id = 1');
+    const products = await this.getAllProducts({ is_active: true, is_featured: true, limit: 4 });
+    return { settings: settingsResult.rows[0], products };
+  }
+
+  async updateStorefront(fields) {
+    const allowed = [
+      'hero_title',
+      'hero_background_url',
+      'hero_logo_url',
+      'hero_overlay_color',
+      'hero_title_color',
+      'card_button_label',
+    ];
+    const updates = [];
+    const values = [];
+    for (const key of allowed) {
+      if (fields[key] !== undefined) {
+        values.push(fields[key]);
+        updates.push(`${key} = $${values.length}`);
+      }
+    }
+    if (!updates.length) {
+      const result = await db.query('SELECT * FROM storefront_settings WHERE id = 1');
+      return result.rows[0];
+    }
+    values.push(1);
+    const result = await db.query(
+      `UPDATE storefront_settings SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = $${values.length} RETURNING *`,
+      values,
+    );
+    return result.rows[0];
+  }
+
   // ============================================
   // CATEGORÍAS
   // ============================================
@@ -46,12 +106,41 @@ class CatalogService {
     return result.rows[0];
   }
 
+  async updateCategory(id, fields) {
+    const allowed = ['name', 'slug', 'description', 'image_url', 'is_active'];
+    const updates = [];
+    const values = [];
+    for (const key of allowed) {
+      if (fields[key] !== undefined) { values.push(fields[key]); updates.push(`${key} = $${values.length}`); }
+    }
+    if (!updates.length) return this.getCategoryById(id);
+    values.push(id);
+    const result = await db.query(`UPDATE categories SET ${updates.join(', ')} WHERE id = $${values.length} RETURNING *`, values);
+    const category = result.rows[0] || null;
+    await cache.invalidatePattern('categories:*');
+    await cache.invalidatePattern(`category:${id}`);
+    return category;
+  }
+
+  async deleteCategory(id) {
+    return this.updateCategory(id, { is_active: false });
+  }
+
+  async permanentlyDeleteCategory(id) {
+    const result = await db.query('DELETE FROM categories WHERE id = $1 RETURNING id', [id]);
+    if (!result.rows[0]) return null;
+    await cache.invalidatePattern('categories:*');
+    await cache.invalidatePattern('products:*');
+    await cache.invalidatePattern(`category:${id}`);
+    return result.rows[0];
+  }
+
   // ============================================
   // PRODUCTOS
   // ============================================
 
-  async getAllProducts({ category_id, is_active = true, limit = 50, offset = 0 } = {}) {
-    const cacheKey = `products:${category_id || 'all'}:${is_active}:${limit}:${offset}`;
+  async getAllProducts({ category_id, is_active = true, is_featured, limit = 50, offset = 0 } = {}) {
+    const cacheKey = `products:${category_id || 'all'}:${is_active}:${is_featured ?? 'all'}:${limit}:${offset}`;
     const cached = await cache.getCached(cacheKey);
     if (cached) return cached;
 
@@ -73,8 +162,13 @@ class CatalogService {
       query += ` AND p.category_id = $${values.length}`;
     }
 
+    if (is_featured !== undefined && is_featured !== null) {
+      values.push(is_featured);
+      query += ` AND p.is_featured = $${values.length}`;
+    }
+
     values.push(limit);
-    query += ` ORDER BY p.created_at DESC LIMIT $${values.length}`;
+    query += ` ORDER BY p.display_order ASC, p.created_at DESC LIMIT $${values.length}`;
 
     values.push(offset);
     query += ` OFFSET $${values.length}`;
@@ -142,13 +236,18 @@ class CatalogService {
     main_image_url,
     images = [],
     is_customizable = false,
+    is_featured = false,
+    display_order = 0,
+    display_colors = [],
+    image_position = '50% 50%',
   }) {
     const query = `
       INSERT INTO products (
         category_id, name, slug, description, price, stock,
-        main_image_url, images, is_customizable
+        main_image_url, images, is_customizable,
+        is_featured, display_order, display_colors, image_position
       )
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       RETURNING *
     `;
     const values = [
@@ -161,6 +260,10 @@ class CatalogService {
       main_image_url || null,
       images,
       is_customizable,
+      is_featured,
+      display_order,
+      display_colors,
+      image_position,
     ];
     const result = await db.query(query, values);
     await cache.invalidatePattern('products:*');
@@ -178,6 +281,10 @@ class CatalogService {
       'main_image_url',
       'images',
       'is_customizable',
+      'is_featured',
+      'display_order',
+      'display_colors',
+      'image_position',
       'is_active',
     ];
 
@@ -210,6 +317,18 @@ class CatalogService {
     if (updated?.slug) await cache.invalidatePattern(`product:slug:${updated.slug}`);
 
     return updated;
+  }
+
+  async deleteProduct(id) {
+    return this.updateProduct(id, { is_active: false });
+  }
+
+  async permanentlyDeleteProduct(id) {
+    const result = await db.query('DELETE FROM products WHERE id = $1 RETURNING id', [id]);
+    if (!result.rows[0]) return null;
+    await cache.invalidatePattern('products:*');
+    await cache.invalidatePattern(`product:id:${id}`);
+    return result.rows[0];
   }
 
   async addCustomization(productId, { name, options, required = false }) {

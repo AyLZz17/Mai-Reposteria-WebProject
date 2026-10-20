@@ -14,6 +14,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const sessionExpired =
+    typeof window !== "undefined" &&
+    new URLSearchParams(window.location.search).get("expired") === "1";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,12 +100,12 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {errorMessage && (
+          {(errorMessage || sessionExpired) && (
             <div
               role="alert"
               className="mb-6 rounded-xl border border-[#d88975] bg-[#faebe7] p-3.5 text-center text-sm font-semibold text-[#8b3527] animate-shake"
             >
-              {errorMessage}
+              {errorMessage || "Tu sesión expiró. Inicia sesión nuevamente."}
             </div>
           )}
 
@@ -164,15 +167,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="mt-6 border-t border-[#e4d5c7] pt-5 text-center text-xs text-[#8d6753]">
-            <p className="font-semibold text-[#694d3e] mb-1">Cuentas de prueba:</p>
-            <p>
-              Cliente exitoso: <code className="bg-[#f0e3d5] px-1 py-0.5 rounded text-[#523326]">cliente@mai.com</code> / <code className="bg-[#f0e3d5] px-1 py-0.5 rounded text-[#523326]">1234</code>
-            </p>
-            <p className="mt-0.5">
-              Simular error 500: <code className="bg-[#f0e3d5] px-1 py-0.5 rounded text-[#523326]">error500@mai.com</code>
-            </p>
-          </div>
         </div>
       </main>
     </div>

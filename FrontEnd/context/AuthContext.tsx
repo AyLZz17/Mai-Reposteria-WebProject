@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { User } from "../lib/api";
+import { clearAccessToken, getAccessToken, getCurrentUser, logoutApi, User } from "../lib/api";
 
 interface AuthContextType {
   user: User | null;
@@ -22,22 +22,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const handleExpiredSession = () => {
+      setUser(null);
+      try {
+        localStorage.removeItem(STORAGE_KEY_USER);
+      } catch {
+        // La sesión ya fue invalidada; no bloquear la navegación.
+      }
+    };
+
+    window.addEventListener("mai:auth-expired", handleExpiredSession);
     try {
       const storedUser = localStorage.getItem(STORAGE_KEY_USER);
       if (storedUser) {
         const parsed = JSON.parse(storedUser);
+        setUser(parsed);
+        void getCurrentUser().then((currentUser) => {
+          setUser(currentUser);
+          localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
+        }).catch(() => { if (getAccessToken()) clearAccessToken(); }).finally(() => setIsLoading(false));
+      } else {
         queueMicrotask(() => {
-          setUser(parsed);
           setIsLoading(false);
         });
-        return;
       }
     } catch {
       // Ignorar errores al leer localStorage
+      queueMicrotask(() => setIsLoading(false));
     }
-    queueMicrotask(() => {
-      setIsLoading(false);
-    });
+    return () => window.removeEventListener("mai:auth-expired", handleExpiredSession);
   }, []);
 
   const login = (userData: User) => {
@@ -51,6 +64,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = () => {
     setUser(null);
+    void logoutApi();
+    clearAccessToken();
     try {
       localStorage.removeItem(STORAGE_KEY_USER);
     } catch {

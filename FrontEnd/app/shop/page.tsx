@@ -1,12 +1,15 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AddToCartButton from '../../components/AddToCartButton';
 import { openCookieSettings } from '../../components/CookieBanner';
 import { useCart } from '../../components/CartProvider';
 import UserNav from '../../components/UserNav';
+import { getCatalogProducts, type CatalogProduct } from '../../lib/api';
 
 type Product = {
+  id?: string;
   name: string;
   price: string;
   image: string;
@@ -128,6 +131,20 @@ const categories: Category[] = [
 
 export default function ShopPage() {
   const { itemCount } = useCart();
+  const [backendProducts, setBackendProducts] = useState<CatalogProduct[]>([]);
+  const [catalogError, setCatalogError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getCatalogProducts().then(setBackendProducts).catch(() => setCatalogError('No fue posible cargar el catálogo.'));
+  }, []);
+
+  const categoriesToRender: Category[] = backendProducts.reduce<Category[]>((groups, product) => {
+    const categoryName = product.category_name || 'Productos';
+    let group = groups.find((entry) => entry.name === categoryName);
+    if (!group) { group = { name: categoryName, products: [] }; groups.push(group); }
+    group.products.push({ id: product.id, name: product.name, price: `$${Number(product.price).toLocaleString('es-CO')}`, image: product.main_image_url || '/images/products/galletas-chocolate.svg', colors: ['#d9b787', '#a36a4f', '#e7d0af'], position: '50% 50%' });
+    return groups;
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
@@ -210,7 +227,9 @@ export default function ShopPage() {
           </section>
 
           <section className="space-y-6">
-            {categories.map((category) => (
+            {catalogError && <p className="rounded-xl border border-[#d88975] bg-[#faebe7] p-4 text-center text-sm text-[#8b3527]">{catalogError}</p>}
+            {!catalogError && categoriesToRender.length === 0 && <p className="rounded-xl border border-[#d7c3af] bg-[#f9f5f0] p-8 text-center">Cargando catálogo...</p>}
+            {categoriesToRender.map((category) => (
               <details
                 key={category.name}
                 className="overflow-hidden rounded-[1.75rem] border border-[#d7c3af] bg-[#f5efe6] shadow-[0_18px_34px_rgba(136,97,69,0.12)]"
@@ -268,7 +287,7 @@ export default function ShopPage() {
 
                         <AddToCartButton
                           product={{
-                            id: product.name,
+                            id: product.id || product.name,
                             name: product.name,
                             price: Number(product.price.replace(/\D/g, '')),
                             image: product.image,

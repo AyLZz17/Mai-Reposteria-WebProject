@@ -251,6 +251,10 @@ public class User {
         this.roles.add(role);
     }
 
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+    }
+
     // =========================================================
     // toString  (nunca incluir passwordHash por seguridad)
     // =========================================================

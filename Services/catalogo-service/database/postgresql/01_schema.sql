@@ -40,10 +40,32 @@ CREATE TABLE products (
     main_image_url TEXT,
     images TEXT[] DEFAULT '{}', -- Galería de imágenes secundarias
     is_customizable BOOLEAN DEFAULT FALSE, -- Si permite personalización (sabores, rellenos, mensajes)
+    is_featured BOOLEAN NOT NULL DEFAULT FALSE, -- Mostrar en la sección destacada de la portada
+    display_order INT NOT NULL DEFAULT 0, -- Orden en la sección destacada
+    display_colors TEXT[] NOT NULL DEFAULT '{}', -- Colores mostrados como indicadores en la tarjeta
+    image_position VARCHAR(50) NOT NULL DEFAULT '50% 50%', -- Posición CSS de la imagen de la tarjeta
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ============================================
+-- TABLA: storefront_settings (Configuración editable de la portada)
+-- ============================================
+CREATE TABLE storefront_settings (
+    id SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    hero_title VARCHAR(150) NOT NULL DEFAULT 'New Product',
+    hero_background_url TEXT NOT NULL DEFAULT '/images/banner/Diseño sin título.svg',
+    hero_logo_url TEXT NOT NULL DEFAULT '/images/brand/logo.svg',
+    hero_overlay_color VARCHAR(30) NOT NULL DEFAULT '#d9bcae',
+    hero_title_color VARCHAR(30) NOT NULL DEFAULT '#f5eee7',
+    card_button_label VARCHAR(80) NOT NULL DEFAULT 'ADD TO CART',
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO storefront_settings (id)
+VALUES (1)
+ON CONFLICT (id) DO NOTHING;
 
 -- ============================================
 -- TABLA: product_customizations (Opciones de personalización opcionales)

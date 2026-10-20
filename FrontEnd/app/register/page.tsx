@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../context/AuthContext";
-import { registerApi } from "../../lib/api";
+import { loginApi, registerApi } from "../../lib/api";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -26,8 +26,8 @@ export default function RegisterPage() {
       return;
     }
 
-    if (password.length < 4) {
-      setErrorMessage("La contraseña debe tener al menos 4 caracteres");
+    if (password.length < 8) {
+      setErrorMessage("La contraseña debe tener al menos 8 caracteres");
       return;
     }
 
@@ -58,7 +58,13 @@ export default function RegisterPage() {
       // Respuestas 2xx (éxito): No mostrar código 201 en pantalla.
       // Iniciar sesión y continuar en silencio a términos o inicio
       if (response.status >= 200 && response.status < 300 && response.user) {
-        login(response.user);
+        const authenticated = await loginApi(email, password);
+        if (authenticated.status !== 200 || !authenticated.user) {
+          setErrorMessage("La cuenta fue creada, pero no se pudo iniciar sesión automáticamente");
+          setIsSubmitting(false);
+          return;
+        }
+        login(authenticated.user);
 
         // Si ya aceptó términos va al inicio; como es nuevo, va a términos
         if (hasAcceptedTerms(response.user.id)) {
@@ -168,7 +174,7 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Mínimo 4 caracteres"
+                placeholder="Mínimo 8 caracteres"
                 className="w-full rounded-xl border border-[#d8c5b4] bg-white px-4 py-3 text-sm text-[#523326] placeholder-[#b8a293] focus:border-[#a7725a] focus:outline-none focus:ring-2 focus:ring-[#a7725a]/20 transition-all"
               />
             </div>

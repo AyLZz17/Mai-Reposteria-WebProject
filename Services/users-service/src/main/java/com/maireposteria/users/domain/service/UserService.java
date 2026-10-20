@@ -117,4 +117,19 @@ public class UserService {
         user.setActive(active);
         return userRepository.save(user);
     }
+
+    @Transactional
+    public User promoteToAdmin(String email) {
+        User user = userRepository.findByEmail(email.trim().toLowerCase())
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ese correo"));
+        roleRepository.findByName("ADMIN").ifPresent(user::addRole);
+        return userRepository.save(user);
+    }
+
+    @Transactional
+    public User removeAdminRole(String email) {
+        User user = userRepository.findByEmail(email.trim().toLowerCase()).orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con ese correo"));
+        roleRepository.findByName("ADMIN").ifPresent(user::removeRole);
+        return userRepository.save(user);
+    }
 }

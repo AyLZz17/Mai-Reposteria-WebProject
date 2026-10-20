@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const catalogRoutes = require('./routes/catalog.routes');
+const catalogService = require('./services/catalog.service');
 const db = require('./db');
 const { connectToCache } = require('./cache');
 const logger = require('./logger');
@@ -17,7 +18,9 @@ connectToCache();
 
 // Seguridad y Middlewares
 app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
+if (process.env.ENABLE_CORS !== 'false') {
+  app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
+}
 app.use(express.json());
 
 // Rate Limiter
@@ -61,12 +64,22 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Inicialización del servidor
-app.listen(PORT, () => {
-  logger.success('MAI Repostería - Catálogo Service');
-  logger.success(`Servidor ejecutándose en el puerto ${PORT}`);
-  logger.info(`Health check: http://localhost:${PORT}/actuator/health`);
-  logger.info(`API Catálogo: http://localhost:${PORT}/api/v1/catalog/products`);
-});
+// Inicialización del servidor y migraciones compatibles con instalaciones existentes
+async function start() {
+  try {
+    await catalogService.ensureStorefrontSchema();
+  } catch (error) {
+    logger.error(`No se pudo preparar la configuración de portada: ${error.message}`);
+  }
+
+  app.listen(PORT, () => {
+    logger.success('MAI Repostería - Catálogo Service');
+    logger.success(`Servidor ejecutándose en el puerto ${PORT}`);
+    logger.info(`Health check: http://localhost:${PORT}/actuator/health`);
+    logger.info(`API Catálogo: http://localhost:${PORT}/api/v1/catalog/products`);
+  });
+}
+
+start();
 
 module.exports = app;
