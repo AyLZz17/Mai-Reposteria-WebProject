@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import CookieBanner from "../components/CookieBanner";
 import { CartProvider } from "../components/CartProvider";
+import { AuthProvider } from "../context/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,14 +29,16 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="es"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CartProvider>
-          {children}
-          <CookieBanner />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <CookieBanner />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

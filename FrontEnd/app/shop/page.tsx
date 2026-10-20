@@ -4,6 +4,7 @@ import Link from 'next/link';
 import AddToCartButton from '../../components/AddToCartButton';
 import { openCookieSettings } from '../../components/CookieBanner';
 import { useCart } from '../../components/CartProvider';
+import UserNav from '../../components/UserNav';
 
 type Product = {
   name: string;
@@ -171,13 +172,7 @@ export default function ShopPage() {
                   >
                     ⌕
                   </button>
-                  <button
-                    type="button"
-                    aria-label="Perfil"
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-[#b38d6a] bg-[linear-gradient(135deg,#f8f2eb_0%,#f0e4d7_100%)] text-xl text-[#6d4c3a] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_6px_14px_rgba(123,92,71,0.16)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#f8f2eb_0%,#ead7c0_100%)]"
-                  >
-                    👤
-                  </button>
+                  <UserNav />
                   <Link
                     href="/cart"
                     aria-label="Carrito"
@@ -306,23 +301,23 @@ export default function ShopPage() {
 
               <div className="grid flex-1 grid-cols-2 gap-4 text-sm md:grid-cols-3 xl:grid-cols-6">
                 {[
-                  'MENÚ',
-                  'PEDIDOS PERSONALIZADOS',
-                  'PAGOS',
-                  'ENVÍOS',
-                  'RESEÑAS',
-                  'CONTACTO',
-                  'POLÍTICA DE PRIVACIDAD',
-                  'TÉRMINOS Y CONDICIONES',
-                  'AYUDA',
+                  { label: 'MENÚ', href: '/shop' },
+                  { label: 'PEDIDOS PERSONALIZADOS', href: '#' },
+                  { label: 'PAGOS', href: '#' },
+                  { label: 'ENVÍOS', href: '#' },
+                  { label: 'RESEÑAS', href: '#' },
+                  { label: 'CONTACTO', href: '#' },
+                  { label: 'POLÍTICA DE PRIVACIDAD', href: '/politica-de-privacidad' },
+                  { label: 'TÉRMINOS Y CONDICIONES', href: '/terminos-y-condiciones' },
+                  { label: 'AYUDA', href: '#' },
                 ].map((item) => (
-                  <a
-                    key={item}
-                    href="#"
+                  <Link
+                    key={item.label}
+                    href={item.href}
                     className="text-[#f5efe7]/90 transition-colors hover:text-[#e4c7af]"
                   >
-                    {item}
-                  </a>
+                    {item.label}
+                  </Link>
                 ))}
               </div>
 
