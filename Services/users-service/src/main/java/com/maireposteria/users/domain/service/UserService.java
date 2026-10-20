@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.maireposteria.users.domain.entity.User;
 import com.maireposteria.users.domain.repository.RoleRepository;
 import com.maireposteria.users.domain.repository.UserRepository;
+import com.maireposteria.users.api.exception.ConflictException;
 
 /**
  * Lógica de negocio para la gestión de usuarios.
@@ -47,7 +48,7 @@ public class UserService {
     @Transactional
     public User registerUser(String email, String password, String firstName, String lastName) {
         if (userRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("El correo electrónico ya está registrado: " + email);
+            throw new ConflictException("El correo electrónico ya está registrado: " + email);
         }
 
         User newUser = new User(email, firstName, lastName);

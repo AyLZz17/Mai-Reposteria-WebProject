@@ -18,6 +18,26 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", OffsetDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("error", "Unauthorized");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Map<String, Object>> handleAuthenticationException(AuthenticationException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", OffsetDateTime.now());
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("error", "Unauthorized");
+        body.put("message", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Map<String, Object>> handleConflictException(ConflictException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", OffsetDateTime.now());
         body.put("status", HttpStatus.CONFLICT.value());
         body.put("error", "Conflict");
         body.put("message", ex.getMessage());

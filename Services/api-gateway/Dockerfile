@@ -9,7 +9,7 @@ RUN ./mvnw -B clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
-RUN useradd --system --uid 10001 gateway
+RUN groupadd --gid 10001 gateway && useradd --system --uid 10001 --gid gateway gateway
 COPY --from=build /workspace/target/api-gateway-*.jar /app/api-gateway.jar
 USER gateway
 EXPOSE 8080

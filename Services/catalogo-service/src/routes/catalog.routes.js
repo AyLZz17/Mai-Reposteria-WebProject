@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const catalogService = require('../services/catalog.service');
+const { requireAuth, requireAdmin } = require('../middleware/auth');
 
 // ============================================
 // RUTAS DE CATEGORÍAS
@@ -31,7 +32,7 @@ router.get('/categories/:id', async (req, res, next) => {
 });
 
 // Crear una categoría
-router.post('/categories', async (req, res, next) => {
+router.post('/categories', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const { name, slug, description, image_url } = req.body;
     if (!name || !slug) {
@@ -94,7 +95,7 @@ router.get('/products/:id', async (req, res, next) => {
 });
 
 // Crear un producto
-router.post('/products', async (req, res, next) => {
+router.post('/products', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const {
       category_id,
@@ -134,7 +135,7 @@ router.post('/products', async (req, res, next) => {
 });
 
 // Actualizar un producto
-router.patch('/products/:id', async (req, res, next) => {
+router.patch('/products/:id', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const updated = await catalogService.updateProduct(req.params.id, req.body);
     if (!updated) {
@@ -147,7 +148,7 @@ router.patch('/products/:id', async (req, res, next) => {
 });
 
 // Agregar opciones de personalización a un producto
-router.post('/products/:id/customizations', async (req, res, next) => {
+router.post('/products/:id/customizations', requireAuth, requireAdmin, async (req, res, next) => {
   try {
     const { name, options, required } = req.body;
     if (!name) {

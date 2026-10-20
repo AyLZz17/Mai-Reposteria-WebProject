@@ -51,11 +51,19 @@ spring:
                     retries: 2
                     statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
                     methods: GET
+            - id: cart-health
+              uri: ${CART_SERVICE_URL:http://localhost:3001}
+              predicates:
+                - Path=/api/v1/cart/health
+              filters:
+                - RewritePath=/api/v1/cart/health, /health
+
             - id: cart-service
               uri: ${CART_SERVICE_URL:http://localhost:3001}
               predicates:
                 - Path=/api/v1/cart/**
               filters:
+                - RewritePath=/api/v1/cart(?<segment>/?.*), /api/cart${segment}
                 - name: RequestRateLimiter
                   args:
                     redis-rate-limiter.replenishRate: ${GENERAL_RATE_LIMIT:50}

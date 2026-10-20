@@ -15,6 +15,7 @@ import com.maireposteria.users.api.dto.GoogleLoginRequest;
 import com.maireposteria.users.api.dto.LoginRequest;
 import com.maireposteria.users.api.dto.RefreshTokenRequest;
 import com.maireposteria.users.api.dto.UserResponse;
+import com.maireposteria.users.api.exception.AuthenticationException;
 import com.maireposteria.users.domain.entity.RefreshToken;
 import com.maireposteria.users.domain.entity.User;
 import com.maireposteria.users.domain.repository.RefreshTokenRepository;
@@ -53,18 +54,18 @@ public class AuthService {
     @Transactional
     public AuthResponse login(LoginRequest request, String deviceInfo) {
         User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new IllegalArgumentException("Credenciales inválidas"));
+                .orElseThrow(() -> new AuthenticationException("Credenciales inválidas"));
 
         if (!Boolean.TRUE.equals(user.getActive())) {
-            throw new IllegalArgumentException("La cuenta de usuario se encuentra desactivada");
+            throw new AuthenticationException("La cuenta de usuario se encuentra desactivada");
         }
 
         if (user.getPasswordHash() == null) {
-            throw new IllegalArgumentException("Esta cuenta fue registrada con Google. Por favor inicia sesión con Google.");
+            throw new AuthenticationException("Esta cuenta fue registrada con Google. Por favor inicia sesión con Google.");
         }
 
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
-            throw new IllegalArgumentException("Credenciales inválidas");
+            throw new AuthenticationException("Credenciales inválidas");
         }
 
         user.setLastLoginAt(OffsetDateTime.now());

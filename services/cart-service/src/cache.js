@@ -1,4 +1,5 @@
 const { createClient } = require('redis');
+const logger = require('./logger');
 
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const client = createClient({ url: redisUrl });
@@ -6,17 +7,17 @@ let enabled = false;
 
 client.on('error', (error) => {
   enabled = false;
-  console.warn('Redis unavailable; using MongoDB only:', error.message);
+  logger.warning(`Redis no disponible; utilizando MongoDB: ${error.message}`);
 });
 
 async function connectToCache() {
   try {
     await client.connect();
     enabled = true;
-    console.log(`Connected to Redis at ${redisUrl}`);
+    logger.success(`Conectado a Redis en ${redisUrl}`);
   } catch (error) {
     enabled = false;
-    console.warn('Redis unavailable; using MongoDB only:', error.message);
+    logger.warning(`Redis no disponible; utilizando MongoDB: ${error.message}`);
   }
 }
 

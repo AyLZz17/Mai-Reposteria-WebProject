@@ -1,0 +1,141 @@
+services:
+  users-db:
+    image: postgres:18-alpine
+    container_name: mai-users-db
+    environment:
+      POSTGRES_DB: ${USERS_DB:-mai_users_service}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+    volumes:
+      - users_db_data:/var/lib/postgresql
+      - ./Services/users-service/database/postgresql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  catalog-db:
+    image: postgres:18-alpine
+    container_name: mai-catalog-db
+    environment:
+      POSTGRES_DB: ${CATALOG_DB:-mai_catalog_service}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+    volumes:
+      - catalog_db_data:/var/lib/postgresql
+      - ./Services/catalogo-service/database/postgresql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mongo:
+    image: mongo:8
+    container_name: mai-cart-db
+    volumes:
+      - cart_db_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: mai-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  users-service:
+    build: ./Services/users-service
+    container_name: mai-users-service
+    environment:
+      DB_URL: jdbc:postgresql://users-db:5432/${USERS_DB:-mai_users_service}
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+      JWT_SECRET: ${JWT_SECRET:-change-this-secret-at-least-32-bytes}
+      SERVER_PORT: 8081
+    depends_on:
+      users-db:
+        condition: service_healthy
+    ports:
+      - "8081:8081"
+
+  catalog-service:
+    build: ./Services/catalogo-service
+    container_name: mai-catalog-service
+    environment:
+      PORT: 8082
+      DB_HOST: catalog-db
+      DB_PORT: 5432
+      DB_USER: ${POSTGRES_USER:-postgres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+      DB_NAME: ${CATALOG_DB:-mai_catalog_service}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-change-this-secret-at-least-32-bytes}
+      CORS_ORIGIN: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+    depends_on:
+      catalog-db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+
+  cart-service:
+    build: ./Services/cart-service
+    container_name: mai-cart-service
+    environment:
+      PORT: 3001
+      MONGODB_URI: mongodb://mongo:27017
+      MONGODB_DATABASE: mai_reposteria
+      REDIS_URL: redis://redis:6379
+      CORS_ORIGIN: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3001:3001"
+
+  api-gateway:
+    build: ./Services/api-gateway
+    container_name: mai-api-gateway
+    environment:
+      SERVER_PORT: 8080
+      USERS_SERVICE_URL: http://users-service:8081
+      CATALOG_SERVICE_URL: http://catalog-service:8082
+      CART_SERVICE_URL: http://cart-service:3001
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+      AUTH_RATE_LIMIT: 10
+      AUTH_BURST_CAPACITY: 20
+      GENERAL_RATE_LIMIT: 50
+      GENERAL_BURST_CAPACITY: 100
+    depends_on:
+      redis:
+        condition: service_healthy
+      users-service:
+        condition: service_started
+      catalog-service:
+        condition: service_started
+      cart-service:
+        condition: service_started
+    ports:
+      - "8080:8080"
+
+volumes:
+  users_db_data:
+  catalog_db_data:
+  cart_db_data:
+  redis_data:

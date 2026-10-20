@@ -1,4 +1,5 @@
 const { createClient } = require('redis');
+const logger = require('./logger');
 
 const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const client = createClient({ url: redisUrl });
@@ -6,17 +7,17 @@ let isConnected = false;
 
 client.on('error', (err) => {
   isConnected = false;
-  console.warn('[Redis] No disponible; utilizando PostgreSQL directamente:', err.message);
+  logger.warning(`Redis no disponible; utilizando PostgreSQL: ${err.message}`);
 });
 
 async function connectToCache() {
   try {
     await client.connect();
     isConnected = true;
-    console.log(`[+] Conectado a Redis en ${redisUrl}`);
+    logger.success(`Conectado a Redis en ${redisUrl}`);
   } catch (err) {
     isConnected = false;
-    console.warn('[Redis] No disponible; utilizando PostgreSQL directamente:', err.message);
+    logger.warning(`Redis no disponible; utilizando PostgreSQL: ${err.message}`);
   }
 }
 

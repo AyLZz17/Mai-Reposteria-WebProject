@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const catalogRoutes = require('./routes/catalog.routes');
 const db = require('./db');
 const { connectToCache } = require('./cache');
+const logger = require('./logger');
 
 const app = express();
 const PORT = process.env.PORT || 8082;
@@ -16,7 +17,7 @@ connectToCache();
 
 // Seguridad y Middlewares
 app.use(helmet());
-app.use(cors());
+app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
 app.use(express.json());
 
 // Rate Limiter
@@ -49,10 +50,11 @@ app.get('/actuator/health', async (req, res) => {
     });
   }
 });
+app.get('/health', (req, res) => res.json({ status: 'ok', service: 'catalogo-service' }));
 
 // Manejador global de errores
 app.use((err, req, res, next) => {
-  console.error('[x] Error:', err.message);
+  logger.error(`Error: ${err.message}`);
   res.status(err.status || 500).json({
     error: err.message || '[x] Error interno del servidor',
     timestamp: new Date().toISOString(),
@@ -61,12 +63,10 @@ app.use((err, req, res, next) => {
 
 // Inicialización del servidor
 app.listen(PORT, () => {
-  console.log(`=========================================`);
-  console.log(`[+] MAI Repostería - Catálogo Service`);
-  console.log(`[+] Servidor ejecutándose en el puerto ${PORT}`);
-  console.log(`[+] Health check: http://localhost:${PORT}/actuator/health`);
-  console.log(`[+] API Catálogo: http://localhost:${PORT}/api/v1/catalog/products`);
-  console.log(`=========================================`);
+  logger.success('MAI Repostería - Catálogo Service');
+  logger.success(`Servidor ejecutándose en el puerto ${PORT}`);
+  logger.info(`Health check: http://localhost:${PORT}/actuator/health`);
+  logger.info(`API Catálogo: http://localhost:${PORT}/api/v1/catalog/products`);
 });
 
 module.exports = app;
