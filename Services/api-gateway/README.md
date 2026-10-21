@@ -18,6 +18,6 @@ La Gateway queda disponible en `http://localhost:8080`.
 - `/api/v1/catalog/**` → catalog-service
 - `/api/v1/cart/**` → cart-service
 
-`JWT_ISSUER_URI` activa la validación JWT. Si está vacío, la aplicación permite las peticiones para desarrollo local; no debe dejarse vacío en producción.
+`JWT_SECRET` debe contener al menos 32 bytes y ser el mismo secreto configurado en users-service, catalog-service y cart-service. La Gateway valida la firma HS256 y exige tokens de acceso en las rutas privadas; no arranca si falta el secreto.
 
 Redis se utiliza para el rate limiting. La protección contra intentos fallidos de inicio de sesión pertenece a users-service; la Gateway añade el límite perimetral por IP.

@@ -13,12 +13,12 @@ function mapItems(items: any[], fallback?: CartProduct): CartItem[] { return (it
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth(); const [items, setItems] = useState<CartItem[]>([]); const [loading, setLoading] = useState(false);
-  useEffect(() => { if (!user) { setItems([]); return; } setLoading(true); getCart(user.id).then((cart) => setItems(mapItems(cart.items))).catch(() => setItems([])).finally(() => setLoading(false)); }, [user]);
+  useEffect(() => { if (!user) { setItems([]); return; } setLoading(true); getCart().then((cart) => setItems(mapItems(cart.items))).catch(() => setItems([])).finally(() => setLoading(false)); }, [user]);
   const value = useMemo<CartContextValue>(() => ({
     items, itemCount: items.reduce((n, item) => n + item.quantity, 0), subtotal: items.reduce((n, item) => n + item.price * item.quantity, 0), loading,
-    addItem: (product) => { if (!user) return; addCartItem(user.id, product).then((cart) => setItems(mapItems(cart.items, product))).catch(() => undefined); },
-    decreaseItem: (productId) => { if (!user) return; const item = items.find((entry) => entry.id === productId); if (!item) return; const action = item.quantity === 1 ? deleteCartItem(user.id, productId) : updateCartItem(user.id, productId, item.quantity - 1); action.then((cart) => setItems(mapItems(cart.items, item))).catch(() => undefined); },
-    removeItem: (productId) => { if (!user) return; const item = items.find((entry) => entry.id === productId); deleteCartItem(user.id, productId).then((cart) => setItems(mapItems(cart.items, item))).catch(() => undefined); },
+    addItem: (product) => { if (!user) return; addCartItem(product).then((cart) => setItems(mapItems(cart.items, product))).catch(() => undefined); },
+    decreaseItem: (productId) => { if (!user) return; const item = items.find((entry) => entry.id === productId); if (!item) return; const action = item.quantity === 1 ? deleteCartItem(productId) : updateCartItem(productId, item.quantity - 1); action.then((cart) => setItems(mapItems(cart.items, item))).catch(() => undefined); },
+    removeItem: (productId) => { if (!user) return; const item = items.find((entry) => entry.id === productId); deleteCartItem(productId).then((cart) => setItems(mapItems(cart.items, item))).catch(() => undefined); },
   }), [items, loading, user]);
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

@@ -1,7 +1,6 @@
 function getApiUrl() {
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
-  if (typeof window !== 'undefined') return `${window.location.protocol}//${window.location.hostname}:8080/api/v1`;
-  return 'http://localhost:8080/api/v1';
+  if (typeof window !== 'undefined') return '/api/v1';
+  return process.env.API_INTERNAL_URL || 'http://localhost:8080/api/v1';
 }
 const TOKEN_KEY = 'mai_access_token';
 
@@ -80,7 +79,7 @@ export async function deleteCatalogProduct(id: string) { const res = await reque
 export async function permanentlyDeleteCatalogProduct(id: string) { const res = await request(`/catalog/products/${encodeURIComponent(id)}/permanent`, { method: 'DELETE' }); if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(data.error || 'No fue posible eliminar definitivamente el producto'); } }
 export async function promoteUserToAdmin(email: string) { const res = await request('/users/admin-role', { method: 'PATCH', body: JSON.stringify({ email }) }); const data = await res.json().catch(() => ({})); if (!res.ok) throw new Error(data.error || 'No fue posible asignar el rol de administrador'); return data as User; }
 export async function removeUserAdminRole(email: string) { const res = await request(`/users/admin-role?email=${encodeURIComponent(email)}`, { method: 'DELETE' }); const data = await res.json().catch(() => ({})); if (!res.ok) throw new Error(data.error || 'No fue posible quitar el rol de administrador'); return data as User; }
-export async function getCart(userId: string) { const res = await request(`/cart?userId=${encodeURIComponent(userId)}`); if (!res.ok) throw new Error('No fue posible cargar el carrito'); return res.json(); }
-export async function addCartItem(userId: string, product: { id: string; name: string; price: number }, quantity = 1) { const res = await request('/cart/items', { method: 'POST', body: JSON.stringify({ userId, productId: product.id, name: product.name, price: product.price, quantity }) }); if (!res.ok) throw new Error('No fue posible agregar el producto'); return res.json(); }
-export async function updateCartItem(userId: string, productId: string, quantity: number) { const res = await request(`/cart/items/${encodeURIComponent(productId)}`, { method: 'PATCH', body: JSON.stringify({ userId, quantity }) }); if (!res.ok) throw new Error('No fue posible actualizar el carrito'); return res.json(); }
-export async function deleteCartItem(userId: string, productId: string) { const res = await request(`/cart/items/${encodeURIComponent(productId)}?userId=${encodeURIComponent(userId)}`, { method: 'DELETE' }); if (!res.ok) throw new Error('No fue posible eliminar el producto'); return res.json(); }
+export async function getCart() { const res = await request('/cart'); if (!res.ok) throw new Error('No fue posible cargar el carrito'); return res.json(); }
+export async function addCartItem(product: { id: string; name: string; price: number }, quantity = 1) { const res = await request('/cart/items', { method: 'POST', body: JSON.stringify({ productId: product.id, name: product.name, price: product.price, quantity }) }); if (!res.ok) throw new Error('No fue posible agregar el producto'); return res.json(); }
+export async function updateCartItem(productId: string, quantity: number) { const res = await request(`/cart/items/${encodeURIComponent(productId)}`, { method: 'PATCH', body: JSON.stringify({ quantity }) }); if (!res.ok) throw new Error('No fue posible actualizar el carrito'); return res.json(); }
+export async function deleteCartItem(productId: string) { const res = await request(`/cart/items/${encodeURIComponent(productId)}`, { method: 'DELETE' }); if (!res.ok) throw new Error('No fue posible eliminar el producto'); return res.json(); }
