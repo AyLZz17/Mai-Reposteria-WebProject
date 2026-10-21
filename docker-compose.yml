@@ -36,17 +36,19 @@ services:
       retries: 10
 
   mongo:
-    image: mongo:8
+    image: mongo:7.0
     container_name: mai-cart-db
+    restart: unless-stopped
     volumes:
       - cart_db_data:/data/db
     ports:
       - "${MONGO_HOST_PORT:-27018}:27017"
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
-      interval: 5s
+      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand({ping: 1})' || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 5
+      start_period: 10s
 
   redis:
     image: redis:7-alpine
