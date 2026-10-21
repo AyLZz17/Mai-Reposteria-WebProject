@@ -1,7 +1,5 @@
 package com.maireposteria.gateway.config;
 
-import java.util.List;
-
 import org.springframework.cloud.gateway.filter.ratelimit.KeyResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +16,9 @@ public class GatewayConfig {
     }
 
     private String resolveClientIp(ServerWebExchange exchange) {
-        String forwarded = exchange.getRequest().getHeaders().getFirst("X-Forwarded-For");
-        if (forwarded != null && !forwarded.isBlank()) {
-            return forwarded.split(",")[0].trim();
+        String realIp = exchange.getRequest().getHeaders().getFirst("X-Real-IP");
+        if (realIp != null && !realIp.isBlank()) {
+            return realIp.trim();
         }
         if (exchange.getRequest().getRemoteAddress() != null
                 && exchange.getRequest().getRemoteAddress().getAddress() != null) {

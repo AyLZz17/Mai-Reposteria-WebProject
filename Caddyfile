@@ -1,0 +1,17 @@
+{
+	default_sni {$SITE_ADDRESS}
+}
+
+{$SITE_ADDRESS} {
+	tls {
+		issuer acme https://acme-v02.api.letsencrypt.org/directory {
+			profile shortlived
+		}
+	}
+
+	@api path /api/*
+	reverse_proxy @api api-gateway:8080 {
+		header_up X-Real-IP {http.request.remote.host}
+	}
+	reverse_proxy frontend:3000
+}

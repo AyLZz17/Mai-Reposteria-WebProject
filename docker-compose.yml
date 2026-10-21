@@ -5,12 +5,10 @@ services:
     environment:
       POSTGRES_DB: ${USERS_DB:-mai_users_service}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
     volumes:
       - users_db_data:/var/lib/postgresql
       - ./Services/users-service/database/postgresql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
-    ports:
-      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -23,12 +21,10 @@ services:
     environment:
       POSTGRES_DB: ${CATALOG_DB:-mai_catalog_service}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
     volumes:
       - catalog_db_data:/var/lib/postgresql
       - ./Services/catalogo-service/database/postgresql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
-    ports:
-      - "5434:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 5s
@@ -41,8 +37,6 @@ services:
     restart: unless-stopped
     volumes:
       - cart_db_data:/data/db
-    ports:
-      - "${MONGO_HOST_PORT:-27018}:27017"
     healthcheck:
       test: ["CMD-SHELL", "mongosh --eval 'db.runCommand({ping: 1})' || exit 1"]
       interval: 10s
@@ -69,14 +63,12 @@ services:
     environment:
       DB_URL: jdbc:postgresql://users-db:5432/${USERS_DB:-mai_users_service}
       DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
-      JWT_SECRET: ${JWT_SECRET:-change-this-secret-at-least-32-bytes}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
       SERVER_PORT: 8081
     depends_on:
       users-db:
         condition: service_healthy
-    ports:
-      - "8081:8081"
 
   catalog-service:
     build: ./Services/catalogo-service
@@ -87,19 +79,16 @@ services:
       DB_HOST: catalog-db
       DB_PORT: 5432
       DB_USER: ${POSTGRES_USER:-postgres}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:-change-this-password}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
       DB_NAME: ${CATALOG_DB:-mai_catalog_service}
       REDIS_URL: redis://redis:6379
-      JWT_SECRET: ${JWT_SECRET:-change-this-secret-at-least-32-bytes}
-      CORS_ORIGIN: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
       ENABLE_CORS: "false"
     depends_on:
       catalog-db:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "8082:8082"
 
   cart-service:
     build: ./Services/cart-service
@@ -110,15 +99,13 @@ services:
       MONGODB_URI: mongodb://mongo:27017
       MONGODB_DATABASE: mai_reposteria
       REDIS_URL: redis://redis:6379
-      CORS_ORIGIN: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
       ENABLE_CORS: "false"
     depends_on:
       mongo:
         condition: service_healthy
       redis:
         condition: service_healthy
-    ports:
-      - "3001:3001"
 
   api-gateway:
     build: ./Services/api-gateway
@@ -131,7 +118,8 @@ services:
       CART_SERVICE_URL: http://cart-service:3001
       REDIS_HOST: redis
       REDIS_PORT: 6379
-      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000}
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:?CORS_ALLOWED_ORIGINS must be set}
       AUTH_RATE_LIMIT: 10
       AUTH_BURST_CAPACITY: 20
       GENERAL_RATE_LIMIT: 50
@@ -145,23 +133,41 @@ services:
         condition: service_started
       cart-service:
         condition: service_started
-    ports:
-      - "8080:8080"
 
   frontend:
     build: ./FrontEnd
     container_name: mai-frontend
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api/v1}
+      API_INTERNAL_URL: http://api-gateway:8080/api/v1
     depends_on:
       api-gateway:
         condition: service_started
+
+  caddy:
+    image: caddy:2.10-alpine
+    container_name: mai-caddy
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:?SITE_ADDRESS must be set}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      frontend:
+        condition: service_started
+      api-gateway:
+        condition: service_started
     ports:
-      - "3000:3000"
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
 
 volumes:
   users_db_data:
   catalog_db_data:
   cart_db_data:
   redis_data:
+  caddy_data:
+  caddy_config:

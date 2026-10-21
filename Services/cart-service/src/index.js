@@ -6,7 +6,6 @@ const rateLimit = require('express-rate-limit');
 const { connectToDatabase } = require('./db');
 const { connectToCache } = require('./cache');
 const cartRoutes = require('./routes/cart.routes');
-const logger = require('./logger');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,7 +20,7 @@ app.use(cartRoutes);
 
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
 app.use((error, req, res, next) => {
-  logger.error(`Unhandled error: ${error.message}`);
+  console.error(`Unhandled error: ${error.message}`);
   res.status(500).json({ error: 'Internal server error' });
 });
 
@@ -30,10 +29,10 @@ async function startServer() {
     await connectToDatabase();
     await connectToCache();
     app.listen(PORT, () => {
-      logger.success(`Cart service running on http://localhost:${PORT}`);
+      console.log(`Cart service running on port ${PORT}`);
     });
   } catch (error) {
-    logger.error(`Could not start cart service: ${error.message}`);
+    console.error(`Could not start cart service: ${error.message}`);
     process.exit(1);
   }
 }
