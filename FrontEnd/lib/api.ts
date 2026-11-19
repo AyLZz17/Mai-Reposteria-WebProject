@@ -34,6 +34,7 @@ export type StorefrontSettings = {
   hero_overlay_color: string;
   hero_title_color: string;
   card_button_label: string;
+  about_text: string;
 };
 export type StorefrontResponse = { settings: StorefrontSettings; products: CatalogProduct[] };
 

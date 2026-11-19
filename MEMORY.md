@@ -8,4 +8,7 @@
 - `SUPER_ADMIN` dispone de la sección Administradores para promover usuarios por correo; el backend valida el rol.
 - Los administradores normales no ven la sección de gestión de administradores.
 - Un `SUPER_ADMIN` puede asignar y quitar el rol `ADMIN` por correo.
+- La portada prioriza móvil, conserva la paleta crema/cacao/terracota y presenta acceso directo al catálogo.
+- UX/UI 26.1: se mejoraron jerarquía visual de portada, tarjetas adaptables y foco visible de navegación; los otros puntos 26.1 siguen pendientes por indicación del usuario.
+- About ahora usa `storefront_settings.about_text`; se edita desde Portada en `/admin` y aparece en la sección enlazada desde ABOUT.
 

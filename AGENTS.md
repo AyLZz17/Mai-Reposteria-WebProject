@@ -15,3 +15,10 @@ Archivos de gobierno: `AGENTS.md` (reglas permanentes) · `SKILLS.md` (habilidad
 - **Documentos fuente ../wiki
 - **Documentación derivada:** ../wiki
 
+## 2. Criterios de experiencia de usuario
+
+- Priorizar la navegación y lectura en móvil, manteniendo la identidad visual cálida ya validada (tonos crema, cacao y terracota).
+- Mantener la portada enfocada en descubrir el catálogo y llegar a la tienda con pocos pasos.
+- Usar estructura semántica, controles identificables y estados de foco visibles para facilitar teclado y tecnologías de asistencia.
+- El contenido público editable por administración debe persistir en backend y renderizarse como texto plano con límites de longitud.
+

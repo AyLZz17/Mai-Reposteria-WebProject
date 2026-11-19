@@ -2,6 +2,8 @@ services:
   users-db:
     image: postgres:18-alpine
     container_name: mai-users-db
+    ports:
+      - "5433:5432"
     environment:
       POSTGRES_DB: ${USERS_DB:-mai_users_service}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -18,6 +20,8 @@ services:
   catalog-db:
     image: postgres:18-alpine
     container_name: mai-catalog-db
+    ports:
+      - "5434:5432"
     environment:
       POSTGRES_DB: ${CATALOG_DB:-mai_catalog_service}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}

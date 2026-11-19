@@ -24,8 +24,13 @@ class CatalogService {
         hero_overlay_color VARCHAR(30) NOT NULL DEFAULT '#d9bcae',
         hero_title_color VARCHAR(30) NOT NULL DEFAULT '#f5eee7',
         card_button_label VARCHAR(80) NOT NULL DEFAULT 'ADD TO CART',
+        about_text TEXT NOT NULL DEFAULT 'En Mai Repostería preparamos postres artesanales con dedicación, para compartir momentos especiales con quienes más quieres.',
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+    await db.query(`
+      ALTER TABLE storefront_settings
+        ADD COLUMN IF NOT EXISTS about_text TEXT NOT NULL DEFAULT 'En Mai Repostería preparamos postres artesanales con dedicación, para compartir momentos especiales con quienes más quieres.'
     `);
     await db.query('INSERT INTO storefront_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING');
   }
@@ -44,11 +49,17 @@ class CatalogService {
       'hero_overlay_color',
       'hero_title_color',
       'card_button_label',
+      'about_text',
     ];
     const updates = [];
     const values = [];
     for (const key of allowed) {
       if (fields[key] !== undefined) {
+        if (key === 'about_text' && (typeof fields[key] !== 'string' || fields[key].length > 2000)) {
+          const error = new Error('La descripción de About debe tener máximo 2000 caracteres.');
+          error.status = 400;
+          throw error;
+        }
         values.push(fields[key]);
         updates.push(`${key} = $${values.length}`);
       }

@@ -79,22 +79,22 @@ export default function Home() {
                     className="h-full w-full object-cover"
                   />
                 </div>
-                <div className="text-[1.8rem] font-medium tracking-[0.12em] lg:text-[3.2rem]">
+                <div className="text-[1.25rem] font-medium tracking-[0.1em] sm:text-[1.8rem] lg:text-[2.5rem]">
                   MAI REPOSTERIA
                 </div>
               </div>
 
-              <nav className="flex flex-wrap items-center justify-center gap-6 text-[0.9rem] uppercase tracking-[0.22em] text-[#6d4c3a] lg:gap-10 lg:text-[1.1rem]">
+              <nav aria-label="Navegación principal" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-[0.78rem] uppercase tracking-[0.16em] text-[#6d4c3a] sm:text-[0.9rem] lg:gap-8 lg:text-[1rem]">
                 {[
                   { label: 'HOME', href: '/' },
-                  { label: 'ABOUT', href: '#' },
+                  { label: 'ABOUT', href: '#about' },
                   { label: 'SHOP', href: '/shop' },
                   { label: 'CONTACT', href: '#' },
                 ].map((item) => (
                   <a
                     key={item.label}
                     href={item.href}
-                    className="transition-opacity hover:opacity-70"
+                    className="rounded-sm py-2 transition-opacity hover:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]"
                   >
                     {item.label}
                   </a>
@@ -129,28 +129,46 @@ export default function Home() {
         </header>
 
         <main className="mx-auto max-w-[1500px] px-6 pb-16">
-          <section className="relative mt-8 overflow-hidden border-y border-[#d8c5b4] bg-[#d9bcae]" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.15)), url('${settings?.hero_background_url || "/images/banner/Diseño%20sin%20título.svg"}')`, backgroundSize: 'cover', backgroundPosition: 'center top' }}>
+          <section aria-labelledby="hero-title" className="relative mt-6 overflow-hidden rounded-[1.75rem] border border-[#d8c5b4] bg-[#d9bcae] shadow-[0_20px_48px_rgba(104,72,53,0.12)] sm:mt-8" style={{ backgroundImage: `linear-gradient(rgba(255,255,255,0.15), rgba(255,255,255,0.15)), url('${settings?.hero_background_url || "/images/banner/Diseño%20sin%20título.svg"}')`, backgroundSize: 'cover', backgroundPosition: 'center top' }}>
             <div className="absolute inset-0 bg-[#d9bcae]/70" />
 
-            <div className="relative flex flex-col items-center justify-center gap-6 py-10 lg:py-16">
+            <div className="relative flex flex-col items-center justify-center gap-5 px-5 py-10 text-center sm:gap-6 lg:py-16">
               <div className="flex items-center justify-center">
-                <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-[10px] border-[#a7725a] shadow-[0_12px_26px_rgba(126,86,64,0.25)]"><img src={settings?.hero_logo_url || "/images/brand/logo.svg"} alt="Logo Mai Reposteria" className="h-full w-full object-cover" /></div>
+                <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-[7px] border-[#a7725a] shadow-[0_12px_26px_rgba(126,86,64,0.25)] sm:h-36 sm:w-36 sm:border-[9px]"><img src={settings?.hero_logo_url || "/images/brand/logo.svg"} alt="Logo Mai Reposteria" className="h-full w-full object-cover" /></div>
               </div>
 
-              <h2 className="text-center text-[2.5rem] leading-none italic drop-shadow-[0_4px_12px_rgba(104,72,53,0.26)] lg:text-[5.5rem]" style={{ color: settings?.hero_title_color || "#f5eee7" }}>
+              <h1 id="hero-title" className="max-w-4xl text-[2.4rem] font-medium leading-tight italic drop-shadow-[0_4px_12px_rgba(104,72,53,0.26)] sm:text-5xl lg:text-7xl" style={{ color: settings?.hero_title_color || "#f5eee7" }}>
                 {settings?.hero_title || "New Product"}
-              </h2>
+              </h1>
+              <p className="max-w-xl text-sm leading-6 text-[#51382d] sm:text-base">Hecho con cariño para acompañar tus momentos especiales.</p>
+              <Link href="/shop" className="mt-1 inline-flex min-h-12 items-center justify-center rounded-full border border-[#8c5d46] bg-[#8c5d46] px-7 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[#fffaf5] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#704834] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fffaf5]">Explorar productos</Link>
             </div>
           </section>
 
-          <section className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+          <section id="about" aria-labelledby="about-title" className="mx-auto mt-12 grid max-w-5xl gap-4 rounded-[1.5rem] border border-[#decbbb] bg-[#f8f2eb] px-6 py-8 shadow-[0_12px_30px_rgba(136,97,69,0.08)] sm:mt-16 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] sm:items-center sm:gap-10 sm:px-10 sm:py-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a7725a]">Nuestra esencia</p>
+              <h2 id="about-title" className="mt-2 text-3xl font-medium italic text-[#6d4c3a] sm:text-4xl">About Mai</h2>
+            </div>
+            <p className="whitespace-pre-line text-base leading-7 text-[#684b3d]">{settings?.about_text ?? "En Mai Repostería preparamos postres artesanales con dedicación, para compartir momentos especiales con quienes más quieres."}</p>
+          </section>
+
+          <section id="productos-destacados" aria-labelledby="products-title" className="mt-12 sm:mt-16">
+            <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a7725a]">Una selección para ti</p>
+                <h2 id="products-title" className="mt-2 text-3xl font-medium italic text-[#6d4c3a] sm:text-4xl">Favoritos de la casa</h2>
+              </div>
+              <Link href="/shop" className="w-fit rounded-sm text-sm font-semibold text-[#80543f] underline decoration-[#b88f71] underline-offset-4 hover:text-[#5e3c2d] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Ver todo el menú <span aria-hidden="true">→</span></Link>
+            </div>
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:gap-6 xl:grid-cols-4">
             {products.map((product: any) => (
               <article
                 key={product.name}
-                className="group flex min-h-full flex-col rounded-[1.75rem] border border-[#d7c3af] bg-[#f5efe6] p-4 shadow-[0_18px_34px_rgba(136,97,69,0.12)]"
+                className="group flex min-h-full flex-col rounded-[1.5rem] border border-[#d7c3af] bg-[#f9f5ef] p-3 shadow-[0_12px_30px_rgba(136,97,69,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(136,97,69,0.16)] sm:p-4"
               >
                 <div className="overflow-hidden rounded-[1.5rem] bg-[#efe2d4]">
-                  <div className="h-[320px] w-full overflow-hidden">
+                  <div className="h-64 w-full overflow-hidden sm:h-72 xl:h-60 2xl:h-72">
                     <img
                       src={product.main_image_url || product.image || "/images/products/galletas-chocolate.svg"}
                       alt={product.name}
@@ -162,7 +180,7 @@ export default function Home() {
 
                 <div className="mt-5 flex flex-1 flex-col justify-between text-center">
                   <div>
-                    <h3 className="text-[1.9rem] italic text-[#6d4c3a]">{product.name}</h3>
+                    <h3 className="min-h-14 text-xl leading-7 italic text-[#6d4c3a] sm:text-2xl">{product.name}</h3>
 
                     <div className="mt-4 flex items-center justify-center gap-3">
                       {(product.display_colors || ("colors" in product ? product.colors : [])).map((color: string) => (
@@ -191,6 +209,7 @@ export default function Home() {
                 </div>
               </article>
             ))}
+            </div>
           </section>
         </main>
 
