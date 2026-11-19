@@ -168,9 +168,9 @@ export default function ShopPage() {
               <nav className="flex flex-wrap items-center justify-center gap-6 text-[0.9rem] uppercase tracking-[0.22em] text-[#6d4c3a] lg:gap-10 lg:text-[1.1rem]">
                 {[
                   { label: 'HOME', href: '/' },
-                  { label: 'ABOUT', href: '#' },
+                  { label: 'ABOUT', href: '/about' },
                   { label: 'SHOP', href: '/shop' },
-                  { label: 'CONTACT', href: '#' },
+                  { label: 'CONTACT', href: '/contact' },
                 ].map((item) => (
                   <a
                     key={item.label}
@@ -325,7 +325,7 @@ export default function ShopPage() {
                   { label: 'PAGOS', href: '#' },
                   { label: 'ENVÍOS', href: '#' },
                   { label: 'RESEÑAS', href: '#' },
-                  { label: 'CONTACTO', href: '#' },
+                  { label: 'CONTACTO', href: '/contact' },
                   { label: 'POLÍTICA DE PRIVACIDAD', href: '/politica-de-privacidad' },
                   { label: 'TÉRMINOS Y CONDICIONES', href: '/terminos-y-condiciones' },
                   { label: 'AYUDA', href: '#' },

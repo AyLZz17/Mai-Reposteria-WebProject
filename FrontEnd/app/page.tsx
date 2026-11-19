@@ -87,9 +87,9 @@ export default function Home() {
               <nav aria-label="Navegación principal" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 text-[0.78rem] uppercase tracking-[0.16em] text-[#6d4c3a] sm:text-[0.9rem] lg:gap-8 lg:text-[1rem]">
                 {[
                   { label: 'HOME', href: '/' },
-                  { label: 'ABOUT', href: '#about' },
+                  { label: 'ABOUT', href: '/about' },
                   { label: 'SHOP', href: '/shop' },
-                  { label: 'CONTACT', href: '#' },
+                  { label: 'CONTACT', href: '/contact' },
                 ].map((item) => (
                   <a
                     key={item.label}
@@ -143,14 +143,6 @@ export default function Home() {
               <p className="max-w-xl text-sm leading-6 text-[#51382d] sm:text-base">Hecho con cariño para acompañar tus momentos especiales.</p>
               <Link href="/shop" className="mt-1 inline-flex min-h-12 items-center justify-center rounded-full border border-[#8c5d46] bg-[#8c5d46] px-7 py-3 text-xs font-bold uppercase tracking-[0.18em] text-[#fffaf5] shadow-lg transition hover:-translate-y-0.5 hover:bg-[#704834] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#fffaf5]">Explorar productos</Link>
             </div>
-          </section>
-
-          <section id="about" aria-labelledby="about-title" className="mx-auto mt-12 grid max-w-5xl gap-4 rounded-[1.5rem] border border-[#decbbb] bg-[#f8f2eb] px-6 py-8 shadow-[0_12px_30px_rgba(136,97,69,0.08)] sm:mt-16 sm:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] sm:items-center sm:gap-10 sm:px-10 sm:py-10">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#a7725a]">Nuestra esencia</p>
-              <h2 id="about-title" className="mt-2 text-3xl font-medium italic text-[#6d4c3a] sm:text-4xl">About Mai</h2>
-            </div>
-            <p className="whitespace-pre-line text-base leading-7 text-[#684b3d]">{settings?.about_text ?? "En Mai Repostería preparamos postres artesanales con dedicación, para compartir momentos especiales con quienes más quieres."}</p>
           </section>
 
           <section id="productos-destacados" aria-labelledby="products-title" className="mt-12 sm:mt-16">
@@ -234,7 +226,7 @@ export default function Home() {
                   { label: 'PAGOS', href: '#' },
                   { label: 'ENVÍOS', href: '#' },
                   { label: 'RESEÑAS', href: '#' },
-                  { label: 'CONTACTO', href: '#' },
+                  { label: 'CONTACTO', href: '/contact' },
                   { label: 'POLÍTICA DE PRIVACIDAD', href: '/politica-de-privacidad' },
                   { label: 'TÉRMINOS Y CONDICIONES', href: '/terminos-y-condiciones' },
                   { label: 'AYUDA', href: '#' },

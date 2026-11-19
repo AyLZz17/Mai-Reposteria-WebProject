@@ -9,3 +9,19 @@
 La Gateway, catalog-service y cart-service validan los tokens HS256 con el mismo `JWT_SECRET` que users-service. Los carritos se asocian al `userId` firmado en el token; los identificadores enviados por el cliente se ignoran.
 
 Las contraseñas y el secreto JWT ya se rotaron en el `.env` local, que no se versiona. Al cambiar `JWT_SECRET` se invalidan los tokens emitidos anteriormente.
+
+## Configurar el formulario de contacto
+
+El botón de correo abre la aplicación de correo que use el visitante con el destinatario y el mensaje preparados. Añade al `.env` de la raíz el buzón que debe recibir los mensajes:
+
+```dotenv
+CONTACT_EMAIL=correo-destino@ejemplo.com
+```
+
+Después de guardar la configuración, reconstruye el frontend:
+
+```powershell
+docker compose up -d --build frontend
+```
+
+El cliente revisa el borrador y pulsa **Enviar** desde su aplicación de correo. Si no tiene una aplicación de correo configurada en el dispositivo, puede usar el enlace de WhatsApp personalizado de la misma página. El envío directo desde la web mediante Resend puede añadirse después sin cambiar el formulario ni el número de WhatsApp.

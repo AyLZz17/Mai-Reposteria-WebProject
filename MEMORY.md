@@ -9,6 +9,7 @@
 - Los administradores normales no ven la sección de gestión de administradores.
 - Un `SUPER_ADMIN` puede asignar y quitar el rol `ADMIN` por correo.
 - La portada prioriza móvil, conserva la paleta crema/cacao/terracota y presenta acceso directo al catálogo.
-- UX/UI 26.1: se mejoraron jerarquía visual de portada, tarjetas adaptables y foco visible de navegación; los otros puntos 26.1 siguen pendientes por indicación del usuario.
-- About ahora usa `storefront_settings.about_text`; se edita desde Portada en `/admin` y aparece en la sección enlazada desde ABOUT.
+- UX/UI 26.1: se mejoraron jerarquía visual de portada, tarjetas adaptables y foco visible de navegación; los puntos 4 a 9 siguen pendientes por indicación del usuario.
+- About ahora usa `storefront_settings.about_text`; se edita desde Portada en `/admin` y se muestra en la ruta `/about`, fuera de la portada de tienda.
+- Contact tiene ruta `/contact`, abre un borrador `mailto:` dirigido a `CONTACT_EMAIL` y ofrece WhatsApp personalizado a +57 319 558 3957; el envío directo con Resend queda como posible evolución.
 
