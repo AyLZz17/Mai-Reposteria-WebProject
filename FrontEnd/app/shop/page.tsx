@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AddToCartButton from '../../components/AddToCartButton';
+import CatalogSearch from '../../components/CatalogSearch';
 import { openCookieSettings } from '../../components/CookieBanner';
 import { useCart } from '../../components/CartProvider';
 import UserNav from '../../components/UserNav';
@@ -21,6 +22,10 @@ type Category = {
   name: string;
   products: Product[];
 };
+
+function normalizeSearch(value: string) {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
 
 const categories: Category[] = [
   {
@@ -133,12 +138,33 @@ export default function ShopPage() {
   const { itemCount } = useCart();
   const [backendProducts, setBackendProducts] = useState<CatalogProduct[]>([]);
   const [catalogError, setCatalogError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isCatalogLoading, setIsCatalogLoading] = useState(true);
 
   useEffect(() => {
-    getCatalogProducts().then(setBackendProducts).catch(() => setCatalogError('No fue posible cargar el catálogo.'));
+    setSearchQuery(new URLSearchParams(window.location.search).get('q')?.slice(0, 100) || '');
+    getCatalogProducts()
+      .then(setBackendProducts)
+      .catch(() => setCatalogError('No fue posible cargar el catálogo.'))
+      .finally(() => setIsCatalogLoading(false));
   }, []);
 
-  const categoriesToRender: Category[] = backendProducts.reduce<Category[]>((groups, product) => {
+  const searchTokens = normalizeSearch(searchQuery.trim()).split(/\s+/).filter(Boolean);
+  const matchingProducts = backendProducts.filter((product) => {
+    if (searchTokens.length === 0) return true;
+    const searchableText = normalizeSearch([
+      product.name,
+      product.slug || '',
+      product.description || '',
+      product.category_name || 'Productos',
+      String(product.price),
+      Number(product.price).toLocaleString('es-CO'),
+      product.stock === undefined ? '' : product.stock > 0 ? 'disponible' : 'agotado',
+    ].join(' '));
+    return searchTokens.every((token) => searchableText.includes(token));
+  });
+
+  const categoriesToRender: Category[] = matchingProducts.reduce<Category[]>((groups, product) => {
     const categoryName = product.category_name || 'Productos';
     let group = groups.find((entry) => entry.name === categoryName);
     if (!group) { group = { name: categoryName, products: [] }; groups.push(group); }
@@ -182,13 +208,7 @@ export default function ShopPage() {
                 ))}
 
                 <div className="flex items-center gap-3 pl-2">
-                  <button
-                    type="button"
-                    aria-label="Buscar"
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-[#b38d6a] bg-[linear-gradient(135deg,#f8f2eb_0%,#f0e4d7_100%)] text-xl text-[#6d4c3a] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_6px_14px_rgba(123,92,71,0.16)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#f8f2eb_0%,#ead7c0_100%)]"
-                  >
-                    ⌕
-                  </button>
+                  <CatalogSearch />
                   <UserNav />
                   <Link
                     href="/cart"
@@ -226,9 +246,21 @@ export default function ShopPage() {
             </Link>
           </section>
 
+          {searchQuery && (
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#d7c3af] bg-[#f9f5f0] px-5 py-4">
+              <p className="text-sm text-[#684b3d]" aria-live="polite">
+                {isCatalogLoading ? 'Buscando en el catálogo…' : `${matchingProducts.length} ${matchingProducts.length === 1 ? 'producto encontrado' : 'productos encontrados'} para “${searchQuery}”.`}
+              </p>
+              <Link href="/shop" className="text-sm font-semibold text-[#80543f] underline decoration-[#b88f71] underline-offset-4 hover:text-[#5e3c2d]">
+                Limpiar búsqueda
+              </Link>
+            </div>
+          )}
+
           <section className="space-y-6">
             {catalogError && <p className="rounded-xl border border-[#d88975] bg-[#faebe7] p-4 text-center text-sm text-[#8b3527]">{catalogError}</p>}
-            {!catalogError && categoriesToRender.length === 0 && <p className="rounded-xl border border-[#d7c3af] bg-[#f9f5f0] p-8 text-center">Cargando catálogo...</p>}
+            {!catalogError && isCatalogLoading && <p className="rounded-xl border border-[#d7c3af] bg-[#f9f5f0] p-8 text-center">Cargando catalogo...</p>}
+            {!catalogError && !isCatalogLoading && categoriesToRender.length === 0 && <p className="rounded-xl border border-[#d7c3af] bg-[#f9f5f0] p-8 text-center">{searchQuery ? `No encontramos productos para ?${searchQuery}?. Prueba con otro nombre o categoria.` : 'Aun no hay productos disponibles.'}</p>}
             {categoriesToRender.map((category) => (
               <details
                 key={category.name}

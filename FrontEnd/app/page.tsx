@@ -4,10 +4,12 @@ import Image from "next/image";
 import * as React from "react";
 import Link from "next/link";
 import AddToCartButton from "../components/AddToCartButton";
+import CatalogSearch from "../components/CatalogSearch";
 import { useCart } from "../components/CartProvider";
 import UserNav from "../components/UserNav";
 import { useAuth } from "../context/AuthContext";
 import { CatalogProduct, getStorefront, StorefrontSettings } from "../lib/api";
+import { formatCopPrice, parseCopAmount } from "../lib/money";
 
 function BrandLogo() {
   return (
@@ -26,28 +28,28 @@ function BrandLogo() {
 const fallbackProducts = [
   {
     name: "Caja de Alfajores",
-    price: "$15.000",
+    price: 15000,
     image: "/images/products/alfajores.svg",
     colors: ["#d9c4b8", "#b76d55", "#d4ae7b"],
     position: "50% 32%",
   },
   {
     name: "Galletas de Chocolate Blanco",
-    price: "$4.000",
+    price: 4000,
     image: "/images/products/galletas-blanco.svg",
     colors: ["#ceb49e", "#d8b58d", "#8d5a3b"],
     position: "50% 58%",
   },
   {
     name: "Galletas de Chocolate",
-    price: "$4.500",
+    price: 4500,
     image: "/images/products/galletas-chocolate.svg",
     colors: ["#d9b461", "#a85a31", "#6b3f2a"],
     position: "50% 52%",
   },
   {
     name: "Pink Shirt",
-    price: "$5.000",
+    price: 5000,
     image: "/images/products/pink-shirt.svg",
     colors: ["#d3a87a", "#ad6b4f", "#924d3e"],
     position: "50% 50%",
@@ -102,13 +104,7 @@ export default function Home() {
                 {isAdmin && <Link href="/admin" className="font-bold text-[#924d3e] transition-opacity hover:opacity-70">ADMIN</Link>}
 
                 <div className="flex items-center gap-3 pl-2">
-                  <button
-                    type="button"
-                    aria-label="Buscar"
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-[#b38d6a] bg-[linear-gradient(135deg,#f8f2eb_0%,#f0e4d7_100%)] text-xl text-[#6d4c3a] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_6px_14px_rgba(123,92,71,0.16)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#f8f2eb_0%,#ead7c0_100%)]"
-                  >
-                    ⌕
-                  </button>
+                  <CatalogSearch />
                   <UserNav />
                   <Link
                     href="/cart"
@@ -154,7 +150,9 @@ export default function Home() {
               <Link href="/shop" className="w-fit rounded-sm text-sm font-semibold text-[#80543f] underline decoration-[#b88f71] underline-offset-4 hover:text-[#5e3c2d] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Ver todo el menú <span aria-hidden="true">→</span></Link>
             </div>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:gap-6 xl:grid-cols-4">
-            {products.map((product: any) => (
+            {products.map((product: any) => {
+              const priceAmount = parseCopAmount(product.price);
+              return (
               <article
                 key={product.name}
                 className="group flex min-h-full flex-col rounded-[1.5rem] border border-[#d7c3af] bg-[#f9f5ef] p-3 shadow-[0_12px_30px_rgba(136,97,69,0.1)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_38px_rgba(136,97,69,0.16)] sm:p-4"
@@ -184,23 +182,28 @@ export default function Home() {
                       ))}
                     </div>
 
-                    <div className="mt-4 text-[1.7rem] italic text-[#6d4c3a]">{typeof product.price === "number" ? `$${product.price.toLocaleString("es-CO")}` : product.price}</div>
+                    <div className="mt-4 text-[1.7rem] italic text-[#6d4c3a]">{formatCopPrice(product.price)}</div>
                   </div>
 
-                  <AddToCartButton
-                    product={{
-                      id: product.name,
-                      name: product.name,
-                      price: Number(String(product.price).replace(/\D/g, '')),
-                      image: "main_image_url" in product ? product.main_image_url || "" : product.image,
-                      position: "image_position" in product ? product.image_position : product.position,
-                    }}
-                    className="w-full rounded-xl border border-[#b6926d] bg-[#d9bcae] px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.24em] text-[#fefaf4] shadow-[0_8px_18px_rgba(181,149,120,0.35)] transition-all hover:-translate-y-0.5 hover:bg-[#cba487]"
-                    label={settings?.card_button_label || "ADD TO CART"}
-                  />
+                  {priceAmount === null ? (
+                    <p className="mt-6 rounded-xl bg-[#efe4d8] px-4 py-3 text-sm text-[#684b3d]">Precio no disponible</p>
+                  ) : (
+                    <AddToCartButton
+                      product={{
+                        id: product.id || product.name,
+                        name: product.name,
+                        price: priceAmount,
+                        image: "main_image_url" in product ? product.main_image_url || "" : product.image,
+                        position: "image_position" in product ? product.image_position : product.position,
+                      }}
+                      className="w-full rounded-xl border border-[#b6926d] bg-[#d9bcae] px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.24em] text-[#fefaf4] shadow-[0_8px_18px_rgba(181,149,120,0.35)] transition-all hover:-translate-y-0.5 hover:bg-[#cba487]"
+                      label={settings?.card_button_label || "ADD TO CART"}
+                    />
+                  )}
                 </div>
               </article>
-            ))}
+              );
+            })}
             </div>
           </section>
         </main>
