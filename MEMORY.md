@@ -26,3 +26,4 @@
 - Mis pedidos: GET /api/cart/orders/mine filtra por el userId firmado, proyecta campos de seguimiento sin PII y limita a 50; /pedido muestra lista del cliente con refresco cada 30 s y conserva consulta de ticket.
 - Navegacion: el menu superior de Home, Shop, About y Contact enlaza a /pedido con la opcion Seguir pedido.
 - Resenas: catalogo persiste una por user/product en product_reviews; calificacion/comment validados, submission limitada a 10/hora. Publico ve solo APPROVED y promedio/count; Admin > Resenas modera y audita. GET publico con summary/lista; escritura protegida por JWT.
+- Instalacion nueva: README documenta clonado, configuracion segura de .env, arranque/actualizacion Docker y diagnostico; .env.example incluye solo valores de ejemplo.

@@ -24,6 +24,91 @@ En desarrollo local, abre **http://localhost** (puerto `80`, sin HTTPS); Caddy e
 
 MongoDB y Redis solo son accesibles dentro de la red de Docker.
 
+## Guía de instalación en un computador nuevo
+
+Esta guía prepara el entorno local desde cero. No es necesario instalar Java, Node.js, PostgreSQL, MongoDB ni Redis en el computador: Docker ejecuta cada componente en su propio contenedor.
+
+### Requisitos
+
+- Git.
+- Docker Desktop actualizado, iniciado y configurado para usar contenedores Linux. Docker Desktop incluye Docker Compose v2.
+- Conexión a internet durante la primera compilación, para descargar imágenes y dependencias.
+- Puertos `80`, `443`, `5433` y `5434` disponibles. Los puertos `5433` y `5434` se usan para conectar herramientas locales a las bases de datos.
+
+### 1. Descargar el proyecto
+
+Abre PowerShell, Terminal o Git Bash y clona el repositorio:
+
+```bash
+git clone https://github.com/AyLZz17/Mai-Reposteria-WebProject.git
+cd Mai-Reposteria-WebProject
+```
+
+### 2. Crear la configuración local
+
+Crea el archivo `.env` a partir de la plantilla. Este archivo contiene secretos y no debe subirse a Git.
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+macOS, Linux o Git Bash:
+
+```bash
+cp .env.example .env
+```
+
+Abre `.env` y reemplaza `POSTGRES_PASSWORD` y `JWT_SECRET` por valores propios. `JWT_SECRET` debe tener al menos 32 bytes y mantenerse igual para todos los servicios; cambiarlo después invalida las sesiones existentes. Para generar uno aleatorio en PowerShell:
+
+```powershell
+[Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(48))
+```
+
+Para desarrollo local conserva `SITE_ADDRESS=localhost` y los orígenes CORS de ejemplo. En un despliegue público, configura `SITE_ADDRESS` con un dominio que apunte al servidor y `CORS_ALLOWED_ORIGINS` con el origen HTTPS exacto. Caddy necesita que los puertos `80` y `443` sean accesibles desde internet para emitir y renovar el certificado. `CONTACT_EMAIL` y `DELIVERY_FEE_COP` son opcionales; el costo de domicilio es `0` si no se configura.
+
+### 3. Construir e iniciar la tienda
+
+Desde la carpeta raíz del repositorio:
+
+```bash
+docker compose up -d --build
+```
+
+La primera ejecución puede tardar varios minutos. Comprueba que los contenedores estén iniciados y revisa los registros si alguno no arranca:
+
+```bash
+docker compose ps
+docker compose logs -f
+```
+
+Abre **http://localhost** en el navegador. Si el navegador fuerza HTTPS para localhost, prueba **http://127.0.0.1**. Para una instalación pública, abre `https://<SITE_ADDRESS>` una vez que Caddy haya obtenido el certificado.
+
+### 4. Detener o actualizar
+
+Para detener los servicios sin borrar los datos:
+
+```bash
+docker compose down
+```
+
+Para volver a iniciar más adelante, ejecuta `docker compose up -d`. Para reconstruir después de descargar cambios del repositorio:
+
+```bash
+git pull
+docker compose up -d --build
+```
+
+Los datos de cuentas, catálogo, carritos y estado de Caddy se conservan en volúmenes de Docker. **No uses `docker compose down -v` salvo que quieras borrar permanentemente esos datos.**
+
+### Problemas frecuentes
+
+- Si Docker indica que un puerto ya está ocupado, cierra la aplicación que lo utiliza o libera el puerto antes de iniciar el proyecto.
+- Si el gateway no inicia, confirma que `JWT_SECRET` tenga 32 bytes o más y que `POSTGRES_PASSWORD` no esté vacío.
+- Si el dominio público no carga por HTTPS, verifica que `SITE_ADDRESS` resuelva al servidor, que los puertos `80` y `443` estén abiertos y revisa `docker compose logs caddy`.
+- Para ver los registros de un servicio específico, usa `docker compose logs -f <servicio>`, por ejemplo `docker compose logs -f catalog-service`.
+
 ## Cuenta SUPER_ADMIN de pruebas
 
 - **Correo:** `superadmin.test@mai-reposteria.invalid`
