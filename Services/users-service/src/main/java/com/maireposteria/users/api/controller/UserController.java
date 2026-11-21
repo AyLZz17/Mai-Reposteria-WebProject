@@ -2,6 +2,7 @@ package com.maireposteria.users.api.controller;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,12 @@ import org.springframework.security.core.Authentication;
 
 import com.maireposteria.users.api.dto.RegisterUserRequest;
 import com.maireposteria.users.api.dto.UserResponse;
+import com.maireposteria.users.api.dto.AdminAuditEventRequest;
 import com.maireposteria.users.domain.entity.User;
+import com.maireposteria.users.domain.service.AdminAuditLogService;
 import com.maireposteria.users.domain.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -29,9 +33,11 @@ import jakarta.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final AdminAuditLogService auditLogService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AdminAuditLogService auditLogService) {
         this.userService = userService;
+        this.auditLogService = auditLogService;
     }
 
     /**
@@ -92,30 +98,68 @@ public class UserController {
     @PatchMapping("/{id}/status")
     public ResponseEntity<UserResponse> setStatus(
             @PathVariable UUID id,
-            @RequestParam boolean active
+            @RequestParam boolean active,
+            Authentication authentication,
+            HttpServletRequest request
     ) {
-        User updated = userService.setUserActiveStatus(id, active);
-        return ResponseEntity.ok(UserResponse.fromEntity(updated));
+        if (authentication == null || authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        try {
+            User updated = userService.setUserActiveStatus(id, active);
+            String action = active ? "ACTIVATE_USER" : "DEACTIVATE_USER";
+            recordAudit(authentication, request, action, updated.getId().toString(), "SUCCESS",
+                    (active ? "Activó la cuenta " : "Desactivó la cuenta ") + updated.getEmail());
+            return ResponseEntity.ok(UserResponse.fromEntity(updated));
+        } catch (IllegalArgumentException exception) {
+            String action = active ? "ACTIVATE_USER" : "DEACTIVATE_USER";
+            recordAudit(authentication, request, action, id.toString(), "FAILURE", "No se encontró la cuenta " + id + ".");
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PatchMapping("/admin-role")
-    public ResponseEntity<UserResponse> promoteToAdmin(@RequestBody Map<String, String> body, Authentication authentication) {
+    public ResponseEntity<UserResponse> promoteToAdmin(@RequestBody Map<String, String> body, Authentication authentication, HttpServletRequest request) {
         if (authentication == null || authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         String email = body.get("email");
-        if (email == null || email.isBlank()) return ResponseEntity.badRequest().build();
+        if (email == null || email.isBlank()) {
+            recordAudit(authentication, request, "ASSIGN_ADMIN_ROLE", null, "FAILURE", "Fallo la asignación del rol ADMIN: falta el correo.");
+            return ResponseEntity.badRequest().build();
+        }
         try {
-            return ResponseEntity.ok(UserResponse.fromEntity(userService.promoteToAdmin(email)));
+            User updated = userService.promoteToAdmin(email);
+            recordAudit(authentication, request, "ASSIGN_ADMIN_ROLE", updated.getEmail(), "SUCCESS", "Asignó ADMIN: " + updated.getEmail());
+            return ResponseEntity.ok(UserResponse.fromEntity(updated));
         } catch (IllegalArgumentException exception) {
+            recordAudit(authentication, request, "ASSIGN_ADMIN_ROLE", email, "FAILURE", "Fallo la asignación de ADMIN: " + email);
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/admin-role")
-    public ResponseEntity<UserResponse> removeAdminRole(@RequestParam String email, Authentication authentication) {
+    public ResponseEntity<UserResponse> removeAdminRole(@RequestParam String email, Authentication authentication, HttpServletRequest request) {
         if (authentication == null || authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_SUPER_ADMIN"))) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        try { return ResponseEntity.ok(UserResponse.fromEntity(userService.removeAdminRole(email))); }
-        catch (IllegalArgumentException exception) { return ResponseEntity.notFound().build(); }
+        try {
+            User updated = userService.removeAdminRole(email);
+            recordAudit(authentication, request, "REMOVE_ADMIN_ROLE", updated.getEmail(), "SUCCESS", "Quitó ADMIN: " + updated.getEmail());
+            return ResponseEntity.ok(UserResponse.fromEntity(updated));
+        } catch (IllegalArgumentException exception) {
+            recordAudit(authentication, request, "REMOVE_ADMIN_ROLE", email, "FAILURE", "Fallo al quitar ADMIN: " + email);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    private void recordAudit(Authentication authentication, HttpServletRequest request, String action,
+            String entityId, String outcome, String summary) {
+        String requestId = request.getHeader("X-Request-Id");
+        if (requestId != null && !Pattern.matches("[A-Za-z0-9._:-]{1,100}", requestId)) requestId = null;
+        AdminAuditEventRequest event = new AdminAuditEventRequest(action, "USER", entityId, outcome, summary, requestId);
+        try {
+            auditLogService.record(authentication.getName(), event);
+        } catch (RuntimeException error) {
+            auditLogService.logWriteFailure(action, authentication.getName(), error);
+        }
     }
 }

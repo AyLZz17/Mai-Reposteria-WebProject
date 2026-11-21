@@ -5,10 +5,13 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const catalogRoutes = require('./routes/catalog.routes');
+const reviewRoutes = require('./routes/reviews.routes');
 const catalogService = require('./services/catalog.service');
+const reviewService = require('./services/review.service');
 const db = require('./db');
 const { connectToCache } = require('./cache');
 const logger = require('./logger');
+const { requestTelemetry } = require('./request-telemetry');
 
 const app = express();
 const PORT = process.env.PORT || 8082;
@@ -21,7 +24,9 @@ app.use(helmet());
 if (process.env.ENABLE_CORS !== 'false') {
   app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:3000' }));
 }
-app.use(express.json());
+app.use('/api/v1/catalog', requestTelemetry);
+// Admin images are sent as data URLs; a 4 MiB file expands to about 5.34 MiB in JSON.
+app.use(express.json({ limit: process.env.JSON_BODY_LIMIT || '6mb' }));
 
 // Rate Limiter
 const limiter = rateLimit({
@@ -33,6 +38,7 @@ app.use('/api/', limiter);
 
 // Rutas de la API
 app.use('/api/v1/catalog', catalogRoutes);
+app.use('/api/v1/catalog/reviews', reviewRoutes);
 
 // Health check
 app.get('/actuator/health', async (req, res) => {
@@ -57,9 +63,21 @@ app.get('/health', (req, res) => res.json({ status: 'ok', service: 'catalogo-ser
 
 // Manejador global de errores
 app.use((err, req, res, next) => {
-  logger.error(`Error: ${err.message}`);
+  const status = err.status || 500;
+  const message = status === 413
+    ? 'La solicitud supera el límite de tamaño permitido. Reduce la imagen e inténtalo de nuevo.'
+    : status < 500
+      ? err.message
+      : 'Ocurrió un error al guardar los datos. Inténtalo de nuevo.';
+  logger.error('request_failed', {
+    requestId: req.requestId,
+    status,
+    errorCode: err.code || err.type || 'INTERNAL_ERROR',
+    error: err.message,
+  });
   res.status(err.status || 500).json({
-    error: err.message || '[x] Error interno del servidor',
+    error: message,
+    requestId: req.requestId,
     timestamp: new Date().toISOString(),
   });
 });
@@ -70,6 +88,12 @@ async function start() {
     await catalogService.ensureStorefrontSchema();
   } catch (error) {
     logger.error(`No se pudo preparar la configuración de portada: ${error.message}`);
+  }
+
+  try {
+    await reviewService.ensureSchema();
+  } catch (error) {
+    logger.error(`No se pudo preparar el esquema de reseñas: ${error.message}`);
   }
 
   app.listen(PORT, () => {

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import UserNav from "../../components/UserNav";
 
 export default function ContactPage({ contactEmail }: { contactEmail: string }) {
@@ -10,6 +10,15 @@ export default function ContactPage({ contactEmail }: { contactEmail: string }) 
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [emailNotice, setEmailNotice] = useState("");
+  useEffect(() => {
+    const topic = new URLSearchParams(window.location.search).get("tema");
+    const prompts: Record<string, string> = {
+      "pedidos-personalizados": "Quisiera consultar sobre un pedido personalizado.",
+      resenas: "Quisiera compartir una reseña sobre mi experiencia.",
+      ayuda: "Necesito ayuda con una consulta.",
+    };
+    if (topic && prompts[topic]) setMessage(prompts[topic]);
+  }, []);
   const canOpenWhatsApp = name.trim().length >= 2 && message.trim().length >= 3;
   const canOpenEmail = Boolean(contactEmail);
   const mailtoUrl = useMemo(() => {
@@ -42,6 +51,7 @@ export default function ContactPage({ contactEmail }: { contactEmail: string }) 
             <Link href="/" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Home</Link>
             <Link href="/about" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">About</Link>
             <Link href="/shop" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Shop</Link>
+            <Link href="/pedido" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Seguir pedido</Link>
             <Link href="/contact" aria-current="page" className="rounded-sm py-2 font-bold text-[#924d3e] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Contact</Link>
             <UserNav />
           </nav>

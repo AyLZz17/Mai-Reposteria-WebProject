@@ -87,6 +87,7 @@ services:
       DB_NAME: ${CATALOG_DB:-mai_catalog_service}
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
+      USERS_SERVICE_URL: http://users-service:8081
       ENABLE_CORS: "false"
     depends_on:
       catalog-db:
@@ -102,6 +103,9 @@ services:
       PORT: 3001
       MONGODB_URI: mongodb://mongo:27017
       MONGODB_DATABASE: mai_reposteria
+      CATALOG_SERVICE_URL: http://catalog-service:8082/api/v1
+      USERS_SERVICE_URL: http://users-service:8081
+      DELIVERY_FEE_COP: ${DELIVERY_FEE_COP:-0}
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET:?JWT_SECRET must be set}
       ENABLE_CORS: "false"
@@ -110,6 +114,10 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      catalog-service:
+        condition: service_started
+      users-service:
+        condition: service_started
 
   api-gateway:
     build: ./Services/api-gateway

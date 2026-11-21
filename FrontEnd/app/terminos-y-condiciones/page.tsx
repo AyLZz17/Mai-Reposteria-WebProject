@@ -54,14 +54,14 @@ export default function TerminosPage() {
               </p>
             </section>
 
-            <section>
+            <section id="payments">
               <h2 className="text-xl font-bold text-[#523326] mb-2">3. Precios y Formas de Pago</h2>
               <p>
                 Los precios expresados en la tienda están en pesos colombianos (COP) e incluyen los impuestos aplicables. Nos reservamos el derecho de modificar precios en cualquier momento sin previo aviso. Los métodos de pago habilitados incluyen pasarelas seguras y transferencias bancarias según disponibilidad al momento del checkout.
               </p>
             </section>
 
-            <section>
+            <section id="shipping">
               <h2 className="text-xl font-bold text-[#523326] mb-2">4. Políticas de Envío y Entrega</h2>
               <p>
                 Los tiempos de entrega y coberturas se calculan al momento de confirmar el pedido. Es responsabilidad del cliente suministrar una dirección exacta y una persona autorizada para recibir productos perecederos. No nos hacemos responsables por demoras causadas por información errónea o ausencia en el lugar de entrega.

@@ -61,6 +61,9 @@ CREATE TABLE storefront_settings (
     hero_title_color VARCHAR(30) NOT NULL DEFAULT '#f5eee7',
     card_button_label VARCHAR(80) NOT NULL DEFAULT 'ADD TO CART',
     about_text TEXT NOT NULL DEFAULT 'En Mai Repostería preparamos postres artesanales con dedicación, para compartir momentos especiales con quienes más quieres.',
+    footer_x_url TEXT NOT NULL DEFAULT '',
+    footer_instagram_url TEXT NOT NULL DEFAULT '',
+    footer_facebook_url TEXT NOT NULL DEFAULT '',
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

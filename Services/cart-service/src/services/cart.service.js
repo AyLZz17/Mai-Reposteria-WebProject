@@ -13,11 +13,11 @@ async function findCart(userId) {
   return getDatabase().collection('carts').findOne({ userId, status: 'active' });
 }
 
-async function addItem({ userId, productId, name, price, quantity }) {
+async function addItem({ userId, productId, name, price, image, position, quantity }) {
   const collection = getDatabase().collection('carts');
   const now = new Date();
   const cart = await findCart(userId);
-  const newItem = { productId, name, quantity, unitPrice: price, subtotal: price * quantity, addedAt: now };
+  const newItem = { productId, name, quantity, unitPrice: price, subtotal: price * quantity, image, position, addedAt: now };
 
   if (!cart) {
     const newCart = { userId, items: [newItem], totalItems: quantity, subtotal: newItem.subtotal, discount: 0, total: newItem.subtotal, currency: 'COP', status: 'active', createdAt: now, updatedAt: now };

@@ -29,6 +29,7 @@ export default function AboutPage() {
             <Link href="/" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Home</Link>
             <Link href="/about" aria-current="page" className="rounded-sm py-2 font-bold text-[#924d3e] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">About</Link>
             <Link href="/shop" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Shop</Link>
+            <Link href="/pedido" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Seguir pedido</Link>
             <Link href="/contact" className="rounded-sm py-2 hover:text-[#a7725a] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#924d3e]">Contact</Link>
             <UserNav />
           </nav>

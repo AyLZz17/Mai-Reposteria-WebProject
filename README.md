@@ -99,3 +99,27 @@ npm run lint
 ```
 
 `npm run test:integration` del catálogo requiere PostgreSQL disponible y configurado para pruebas.
+
+## Pedidos por WhatsApp
+
+El checkout del carrito registra cada pedido en MongoDB con un ticket `MAI-...`, el estado inicial `PENDING_CONFIRMATION`, los productos y una copia de sus precios validados contra el catalogo. La persona completa su nombre, telefono, modalidad de entrega, direccion cuando aplica e indicaciones; debe aceptar el uso de sus datos para gestionar el pedido. La vista publica `/pedido/<ticket>` muestra fotos, valores y estado, sin exponer nombre, telefono ni direccion.
+
+El boton de WhatsApp prepara un mensaje con el ticket, los datos de entrega, productos, domicilio y total, ademas del enlace a las fotos. El usuario debe revisar y enviar el mensaje desde WhatsApp; crear el ticket no envia mensajes por si solo. La tarifa fija de domicilio se configura en el `.env` de la raiz con `DELIVERY_FEE_COP=5000` (ajusta el valor a la tarifa del negocio); Compose usa `0` si no se define. La recogida personalmente no agrega domicilio.
+
+### Confirmacion y seguimiento del pedido
+
+En **Admin > Pedidos**, busca el ticket para revisar el pedido y confirmar uno pendiente. Despues puedes cambiar manualmente su estado (pendiente, confirmado, en preparacion, listo, en camino, entregado o cancelado) y definir o corregir la fecha estimada. Los cambios quedan en la auditoria administrativa.
+
+El cliente puede consultar el seguimiento en **/pedido** (enlace tambien disponible en el pie de pagina) o usar el enlace directo con su ticket. La vista publica muestra productos, valores, estado y fecha estimada; nunca expone los datos de contacto o direccion. La pagina consulta los cambios cada 30 segundos.
+
+### Pedidos asociados a la cuenta
+
+La ruta **/pedido** muestra automaticamente hasta los 50 pedidos mas recientes asociados a la cuenta autenticada. El cliente puede abrir cada ticket para ver su seguimiento; la lista se actualiza cada 30 segundos y solo consulta pedidos cuyo userId coincide con la sesion. La busqueda manual por ticket sigue disponible.
+
+El menu superior de Home, Shop, About y Contact ofrece el enlace **Seguir pedido** hacia **/pedido**.
+
+## Resenas de productos
+
+Cada producto del catalogo muestra su promedio y cantidad de estrellas aprobadas. El cliente puede abrir el detalle y enviar una calificacion de 1 a 5 estrellas con titulo y comentario; debe iniciar sesion. Cada cuenta tiene una resena por producto y una edicion vuelve a dejarla pendiente de moderacion.
+
+Las resenas nuevas quedan pendientes y no se publican ni afectan el promedio hasta que un administrador las apruebe. En **Admin > Resenas** se revisan por estado y se pueden aprobar o rechazar; las decisiones se registran en Auditoria. Los datos publicos no muestran la cuenta del autor. La tabla se crea de forma idempotente al iniciar Catalogo; su SQL aditivo esta en `Services/catalogo-service/database/postgresql/02_product_reviews.sql`.

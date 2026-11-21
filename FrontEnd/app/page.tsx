@@ -7,8 +7,10 @@ import AddToCartButton from "../components/AddToCartButton";
 import CatalogSearch from "../components/CatalogSearch";
 import { useCart } from "../components/CartProvider";
 import UserNav from "../components/UserNav";
+import StoreFooter from "../components/StoreFooter";
+import ProductReviews from "../components/ProductReviews";
 import { useAuth } from "../context/AuthContext";
-import { CatalogProduct, getStorefront, StorefrontSettings } from "../lib/api";
+import { CatalogProduct, getProductReviewSummaries, getStorefront, ProductReviewSummary, StorefrontSettings } from "../lib/api";
 import { formatCopPrice, parseCopAmount } from "../lib/money";
 
 function BrandLogo() {
@@ -61,12 +63,14 @@ export default function Home() {
   const { user } = useAuth();
   const isAdmin = user?.roles?.some((role) => role === "ADMIN" || role === "SUPER_ADMIN");
   const [storefront, setStorefront] = React.useState<{ settings: StorefrontSettings; products: CatalogProduct[] } | null>(null);
+  const [reviewSummaries, setReviewSummaries] = React.useState<Record<string, ProductReviewSummary>>({});
   React.useEffect(() => { void getStorefront().then(setStorefront).catch(() => undefined); }, []);
+  React.useEffect(() => { void getProductReviewSummaries().then(setReviewSummaries).catch(() => undefined); }, []);
   const settings = storefront?.settings;
   const products = storefront?.products?.length ? storefront.products : fallbackProducts;
 
   return (
-    <div className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
+    <div id="top" className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
       <div className="mx-auto max-w-[1600px]">
         <header className="border-b border-[#d8c5b4] bg-[linear-gradient(135deg,#f5efe7_0%,#f0e3d5_48%,#e0c7ac_100%)]">
           <div className="mx-auto max-w-[1500px] px-6 py-7">
@@ -91,6 +95,7 @@ export default function Home() {
                   { label: 'HOME', href: '/' },
                   { label: 'ABOUT', href: '/about' },
                   { label: 'SHOP', href: '/shop' },
+                  { label: 'SEGUIR PEDIDO', href: '/pedido' },
                   { label: 'CONTACT', href: '/contact' },
                 ].map((item) => (
                   <a
@@ -183,6 +188,7 @@ export default function Home() {
                     </div>
 
                     <div className="mt-4 text-[1.7rem] italic text-[#6d4c3a]">{formatCopPrice(product.price)}</div>
+                    <ProductReviews productId={product.id} summary={product.id ? reviewSummaries[product.id] : undefined} />
                   </div>
 
                   {priceAmount === null ? (
@@ -208,76 +214,7 @@ export default function Home() {
           </section>
         </main>
 
-        <footer className="mt-8 border-t border-[#c7a988] bg-[#1e1d1d] text-[#f5efe7]">
-          <div className="mx-auto max-w-[1500px] px-6 py-8">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#f3e7dc] text-2xl text-[#5f4134]">
-                  M
-                </div>
-                <div>
-                  <div className="text-[1.1rem] font-semibold uppercase tracking-[0.2em] text-[#f5efe7]">
-                    Mai Reposteria
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid flex-1 grid-cols-2 gap-4 text-sm md:grid-cols-3 xl:grid-cols-6">
-                {[
-                  { label: 'MENÚ', href: '/shop' },
-                  { label: 'PEDIDOS PERSONALIZADOS', href: '#' },
-                  { label: 'PAGOS', href: '#' },
-                  { label: 'ENVÍOS', href: '#' },
-                  { label: 'RESEÑAS', href: '#' },
-                  { label: 'CONTACTO', href: '/contact' },
-                  { label: 'POLÍTICA DE PRIVACIDAD', href: '/politica-de-privacidad' },
-                  { label: 'TÉRMINOS Y CONDICIONES', href: '/terminos-y-condiciones' },
-                  { label: 'AYUDA', href: '#' },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-[#f5efe7]/90 transition-colors hover:text-[#e4c7af]"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-4 text-[#f5efe7]">
-                <a href="#" aria-label="X" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  X
-                </a>
-                <a href="#" aria-label="Instagram" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  ◌
-                </a>
-                <a href="#" aria-label="Facebook" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  f
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-8 border-t border-[#c7a988]/70 pt-6 text-sm text-[#f5efe7]/80">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                  <button
-                    type="button"
-                    onClick={() => window.dispatchEvent(new Event('mai:open-cookie-settings'))}
-                    className="self-start text-left underline decoration-[#e4c7af]/70 underline-offset-4 transition hover:text-[#e4c7af] md:self-auto"
-                  >
-                    Preferencias de cookies
-                  </button>
-                  <span>© 2026 Mai Reposteria. Todos los derechos reservados.</span>
-                </div>
-
-                <a href="#" className="flex items-center gap-2 self-start text-[#f5efe7] md:self-auto">
-                  <span>IR AL INICIO</span>
-                  <span className="text-lg">↑</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <StoreFooter settings={settings} loadSettings={false} />
       </div>
 
     </div>

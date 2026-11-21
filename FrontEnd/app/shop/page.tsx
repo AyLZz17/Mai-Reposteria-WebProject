@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AddToCartButton from '../../components/AddToCartButton';
 import CatalogSearch from '../../components/CatalogSearch';
-import { openCookieSettings } from '../../components/CookieBanner';
 import { useCart } from '../../components/CartProvider';
 import UserNav from '../../components/UserNav';
-import { getCatalogProducts, type CatalogProduct } from '../../lib/api';
+import StoreFooter from '../../components/StoreFooter';
+import ProductReviews from '../../components/ProductReviews';
+import { getCatalogProducts, getProductReviewSummaries, type CatalogProduct, type ProductReviewSummary } from '../../lib/api';
 
 type Product = {
   id?: string;
@@ -16,6 +17,7 @@ type Product = {
   image: string;
   colors: string[];
   position: string;
+  reviewSummary?: ProductReviewSummary;
 };
 
 type Category = {
@@ -137,12 +139,14 @@ const categories: Category[] = [
 export default function ShopPage() {
   const { itemCount } = useCart();
   const [backendProducts, setBackendProducts] = useState<CatalogProduct[]>([]);
+  const [reviewSummaries, setReviewSummaries] = useState<Record<string, ProductReviewSummary>>({});
   const [catalogError, setCatalogError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isCatalogLoading, setIsCatalogLoading] = useState(true);
 
   useEffect(() => {
     setSearchQuery(new URLSearchParams(window.location.search).get('q')?.slice(0, 100) || '');
+    getProductReviewSummaries().then(setReviewSummaries).catch(() => undefined);
     getCatalogProducts()
       .then(setBackendProducts)
       .catch(() => setCatalogError('No fue posible cargar el catálogo.'))
@@ -168,12 +172,12 @@ export default function ShopPage() {
     const categoryName = product.category_name || 'Productos';
     let group = groups.find((entry) => entry.name === categoryName);
     if (!group) { group = { name: categoryName, products: [] }; groups.push(group); }
-    group.products.push({ id: product.id, name: product.name, price: `$${Number(product.price).toLocaleString('es-CO')}`, image: product.main_image_url || '/images/products/galletas-chocolate.svg', colors: ['#d9b787', '#a36a4f', '#e7d0af'], position: '50% 50%' });
+    group.products.push({ id: product.id, name: product.name, price: `$${Number(product.price).toLocaleString('es-CO')}`, image: product.main_image_url || '/images/products/galletas-chocolate.svg', colors: ['#d9b787', '#a36a4f', '#e7d0af'], position: '50% 50%', reviewSummary: reviewSummaries[product.id] });
     return groups;
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
+    <div id="top" className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
       <div className="mx-auto max-w-[1600px]">
         <header className="border-b border-[#d8c5b4] bg-[linear-gradient(135deg,#f5efe7_0%,#f0e3d5_48%,#e0c7ac_100%)]">
           <div className="mx-auto max-w-[1500px] px-6 py-7">
@@ -196,6 +200,7 @@ export default function ShopPage() {
                   { label: 'HOME', href: '/' },
                   { label: 'ABOUT', href: '/about' },
                   { label: 'SHOP', href: '/shop' },
+                  { label: 'SEGUIR PEDIDO', href: '/pedido' },
                   { label: 'CONTACT', href: '/contact' },
                 ].map((item) => (
                   <a
@@ -315,6 +320,7 @@ export default function ShopPage() {
                           <div className="mt-4 text-[1.5rem] italic text-[#6d4c3a]">
                             {product.price}
                           </div>
+                          <ProductReviews productId={product.id} summary={product.reviewSummary} />
                         </div>
 
                         <AddToCartButton
@@ -336,76 +342,7 @@ export default function ShopPage() {
           </section>
         </main>
 
-        <footer className="mt-8 border-t border-[#c7a988] bg-[#1e1d1d] text-[#f5efe7]">
-          <div className="mx-auto max-w-[1500px] px-6 py-8">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#f3e7dc] text-2xl text-[#5f4134]">
-                  M
-                </div>
-                <div>
-                  <div className="text-[1.1rem] font-semibold uppercase tracking-[0.2em] text-[#f5efe7]">
-                    Mai Reposteria
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid flex-1 grid-cols-2 gap-4 text-sm md:grid-cols-3 xl:grid-cols-6">
-                {[
-                  { label: 'MENÚ', href: '/shop' },
-                  { label: 'PEDIDOS PERSONALIZADOS', href: '#' },
-                  { label: 'PAGOS', href: '#' },
-                  { label: 'ENVÍOS', href: '#' },
-                  { label: 'RESEÑAS', href: '#' },
-                  { label: 'CONTACTO', href: '/contact' },
-                  { label: 'POLÍTICA DE PRIVACIDAD', href: '/politica-de-privacidad' },
-                  { label: 'TÉRMINOS Y CONDICIONES', href: '/terminos-y-condiciones' },
-                  { label: 'AYUDA', href: '#' },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-[#f5efe7]/90 transition-colors hover:text-[#e4c7af]"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-4 text-[#f5efe7]">
-                <a href="#" aria-label="X" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  X
-                </a>
-                <a href="#" aria-label="Instagram" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  ◌
-                </a>
-                <a href="#" aria-label="Facebook" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  f
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-8 border-t border-[#c7a988]/70 pt-6 text-sm text-[#f5efe7]/80">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                  <button
-                    type="button"
-                    onClick={openCookieSettings}
-                    className="text-left transition-colors hover:text-[#e4c7af]"
-                  >
-                    Preferencias de cookies
-                  </button>
-                  <span>© 2026 Mai Reposteria. Todos los derechos reservados.</span>
-                </div>
-
-                <a href="#" className="flex items-center gap-2 self-start text-[#f5efe7] md:self-auto">
-                  <span>IR AL INICIO</span>
-                  <span className="text-lg">↑</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <StoreFooter />
       </div>
     </div>
   );

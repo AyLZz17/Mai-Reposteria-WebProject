@@ -36,11 +36,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedUser = localStorage.getItem(STORAGE_KEY_USER);
       if (storedUser) {
         const parsed = JSON.parse(storedUser);
+        const accessToken = getAccessToken();
+        if (!accessToken) {
+          setUser(null);
+          localStorage.removeItem(STORAGE_KEY_USER);
+          window.location.assign('/login?expired=1');
+          queueMicrotask(() => setIsLoading(false));
+          return;
+        }
+
         setUser(parsed);
         void getCurrentUser().then((currentUser) => {
           setUser(currentUser);
           localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
-        }).catch(() => { if (getAccessToken()) clearAccessToken(); }).finally(() => setIsLoading(false));
+        }).catch(() => {
+          clearAccessToken();
+          localStorage.removeItem(STORAGE_KEY_USER);
+          setUser(null);
+        }).finally(() => setIsLoading(false));
       } else {
         queueMicrotask(() => {
           setIsLoading(false);
