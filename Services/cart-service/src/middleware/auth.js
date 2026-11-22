@@ -13,11 +13,19 @@ function requireAuth(req, res, next) {
     if (claims.type !== 'ACCESS' || typeof claims.userId !== 'string' || !claims.userId) {
       return res.status(401).json({ error: 'Invalid or expired token' });
     }
-    req.auth = { userId: claims.userId };
+    req.auth = { userId: claims.userId, roles: Array.isArray(claims.roles) ? claims.roles : [] };
     next();
   } catch {
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 }
 
-module.exports = { requireAuth };
+function requireAdmin(req, res, next) {
+  const roles = req.auth?.roles || [];
+  if (!roles.includes('ADMIN') && !roles.includes('SUPER_ADMIN')) {
+    return res.status(403).json({ error: 'Se requiere un rol de administrador.' });
+  }
+  next();
+}
+
+module.exports = { requireAuth, requireAdmin };

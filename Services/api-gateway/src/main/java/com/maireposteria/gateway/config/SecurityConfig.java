@@ -38,7 +38,11 @@ public class SecurityConfig {
                                 "/api/v1/catalog/categories/**",
                                 "/api/v1/catalog/products",
                                 "/api/v1/catalog/products/**",
-                                "/api/v1/cart/health")
+                                "/api/v1/catalog/reviews/summary",
+                                "/api/v1/catalog/reviews/products/**",
+                                "/api/v1/cart/health",
+                                "/api/v1/cart/order-config",
+                                "/api/v1/cart/orders/*/preview")
                         .permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));

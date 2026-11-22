@@ -24,8 +24,19 @@ class CatalogService {
         hero_overlay_color VARCHAR(30) NOT NULL DEFAULT '#d9bcae',
         hero_title_color VARCHAR(30) NOT NULL DEFAULT '#f5eee7',
         card_button_label VARCHAR(80) NOT NULL DEFAULT 'ADD TO CART',
+        about_text TEXT NOT NULL DEFAULT 'En Mai Repostería preparamos postres artesanales con dedicación, para compartir momentos especiales con quienes más quieres.',
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+    await db.query(`
+      ALTER TABLE storefront_settings
+        ADD COLUMN IF NOT EXISTS about_text TEXT NOT NULL DEFAULT 'En Mai Repostería preparamos postres artesanales con dedicación, para compartir momentos especiales con quienes más quieres.'
+    `);
+    await db.query(`
+      ALTER TABLE storefront_settings
+        ADD COLUMN IF NOT EXISTS footer_x_url TEXT NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS footer_instagram_url TEXT NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS footer_facebook_url TEXT NOT NULL DEFAULT ''
     `);
     await db.query('INSERT INTO storefront_settings (id) VALUES (1) ON CONFLICT (id) DO NOTHING');
   }
@@ -44,12 +55,38 @@ class CatalogService {
       'hero_overlay_color',
       'hero_title_color',
       'card_button_label',
+      'about_text',
+      'footer_x_url',
+      'footer_instagram_url',
+      'footer_facebook_url',
     ];
     const updates = [];
     const values = [];
     for (const key of allowed) {
       if (fields[key] !== undefined) {
-        values.push(fields[key]);
+        if (key === 'about_text' && (typeof fields[key] !== 'string' || fields[key].length > 2000)) {
+          const error = new Error('La descripción de About debe tener máximo 2000 caracteres.');
+          error.status = 400;
+          throw error;
+        }
+        if (key.startsWith('footer_')) {
+          const value = fields[key];
+          let valid = value === '';
+          if (typeof value === 'string' && value.length <= 500 && value.trim()) {
+            try {
+              const url = new URL(value.trim());
+              valid = ['http:', 'https:'].includes(url.protocol);
+            } catch { valid = false; }
+          }
+          if (!valid) {
+            const error = new Error('Cada enlace de red debe ser una URL HTTP o HTTPS valida de maximo 500 caracteres.');
+            error.status = 400;
+            throw error;
+          }
+          values.push(value.trim());
+        } else {
+          values.push(fields[key]);
+        }
         updates.push(`${key} = $${values.length}`);
       }
     }

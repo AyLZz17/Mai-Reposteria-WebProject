@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/fallback")
 public class FallbackController {
 
-    @GetMapping({"/users", "/catalog", "/cart"})
+    @RequestMapping(path = {"/users", "/catalog", "/cart"}, method = {
+            RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+            RequestMethod.PATCH, RequestMethod.DELETE
+    })
     public ResponseEntity<Map<String, Object>> serviceUnavailable() {
         return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(Map.of(
                 "timestamp", OffsetDateTime.now().toString(),

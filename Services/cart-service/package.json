@@ -7,7 +7,7 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "test": "jest --runInBand",
-    "check": "node --check src/index.js && node --check src/routes/cart.routes.js && node --check src/services/cart.service.js && node --check src/cache.js"
+    "check": "node --check src/index.js && node --check src/routes/cart.routes.js && node --check src/services/cart.service.js && node --check src/services/order.service.js && node --check src/services/catalog-client.js && node --check src/services/admin-audit-client.js && node --check src/middleware/auth.js && node --check src/cache.js"
   },
   "keywords": [
     "node",

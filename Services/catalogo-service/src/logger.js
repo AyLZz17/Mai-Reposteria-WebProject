@@ -1,18 +1,17 @@
-const colors = {
-  reset: '\x1b[0m',
-  red: '\x1b[31m',
-  yellow: '\x1b[33m',
-  green: '\x1b[32m',
-  blue: '\x1b[36m',
-};
-
-function write(color, prefix, message, ...args) {
-  console.log(`${colors[color]}${prefix} ${message}${colors.reset}`, ...args);
+function write(level, message, fields = {}) {
+  const entry = {
+    timestamp: new Date().toISOString(),
+    level,
+    service: process.env.SERVICE_NAME || 'catalog-service',
+    ...fields,
+    message,
+  };
+  console.log(JSON.stringify(entry));
 }
 
 module.exports = {
-  success: (message, ...args) => write('green', '[+]', message, ...args),
-  warning: (message, ...args) => write('yellow', '[!]', message, ...args),
-  error: (message, ...args) => write('red', '[x]', message, ...args),
-  info: (message, ...args) => write('blue', '[i]', message, ...args),
+  success: (message, fields) => write('info', message, fields),
+  warning: (message, fields) => write('warn', message, fields),
+  error: (message, fields) => write('error', message, fields),
+  info: (message, fields) => write('info', message, fields),
 };

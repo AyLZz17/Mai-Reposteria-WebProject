@@ -7,10 +7,10 @@
 | Parámetro | Valor |
 |-----------|-------|
 | **Host** | `localhost` |
-| **Port** | `5432` |
+| **Port** | `5433` |
 | **Database** | `mai_users_service` |
 | **Username** | `postgres` |
-| **Password** | `tu_password_aqui` |
+| **Password** | El valor de `POSTGRES_PASSWORD` en `.env` |
 | **Driver** | PostgreSQL |
 
 ### Pasos para conectar en DBeaver
@@ -21,10 +21,10 @@
 
 3. **Configurar la conexión:**
    - Host: `localhost`
-   - Puerto: `5432`
+   - Puerto: `5433`
    - Base de datos: `mai_users_service`
    - Usuario: `postgres`
-   - Contraseña: (tu contraseña)
+   - Contraseña: el valor de `POSTGRES_PASSWORD` en `.env` (no el nombre de la variable)
 
 4. **Probar conexión** haciendo clic en "Test Connection"
 
@@ -98,3 +98,5 @@ ORDER BY created_at DESC;
 - **Producción:** Cambiar las credenciales por variables de entorno
 - **Seguridad:** Nunca commitear archivos con contraseñas reales
 - **Backups:** Configurar backups automáticos de PostgreSQL
+- El puerto `5433` del equipo se redirige al puerto `5432` del contenedor `users-db`.
+- Si el volumen de PostgreSQL ya se inicializó, cambiar `POSTGRES_PASSWORD` en `.env` no cambia la contraseña guardada dentro de la base de datos.

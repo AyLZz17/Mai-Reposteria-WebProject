@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import AddToCartButton from '../../components/AddToCartButton';
-import { openCookieSettings } from '../../components/CookieBanner';
+import CatalogSearch from '../../components/CatalogSearch';
 import { useCart } from '../../components/CartProvider';
 import UserNav from '../../components/UserNav';
-import { getCatalogProducts, type CatalogProduct } from '../../lib/api';
+import StoreFooter from '../../components/StoreFooter';
+import ProductReviews from '../../components/ProductReviews';
+import { getCatalogProducts, getProductReviewSummaries, type CatalogProduct, type ProductReviewSummary } from '../../lib/api';
 
 type Product = {
   id?: string;
@@ -15,12 +17,17 @@ type Product = {
   image: string;
   colors: string[];
   position: string;
+  reviewSummary?: ProductReviewSummary;
 };
 
 type Category = {
   name: string;
   products: Product[];
 };
+
+function normalizeSearch(value: string) {
+  return value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
 
 const categories: Category[] = [
   {
@@ -132,22 +139,45 @@ const categories: Category[] = [
 export default function ShopPage() {
   const { itemCount } = useCart();
   const [backendProducts, setBackendProducts] = useState<CatalogProduct[]>([]);
+  const [reviewSummaries, setReviewSummaries] = useState<Record<string, ProductReviewSummary>>({});
   const [catalogError, setCatalogError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isCatalogLoading, setIsCatalogLoading] = useState(true);
 
   useEffect(() => {
-    getCatalogProducts().then(setBackendProducts).catch(() => setCatalogError('No fue posible cargar el catálogo.'));
+    setSearchQuery(new URLSearchParams(window.location.search).get('q')?.slice(0, 100) || '');
+    getProductReviewSummaries().then(setReviewSummaries).catch(() => undefined);
+    getCatalogProducts()
+      .then(setBackendProducts)
+      .catch(() => setCatalogError('No fue posible cargar el catálogo.'))
+      .finally(() => setIsCatalogLoading(false));
   }, []);
 
-  const categoriesToRender: Category[] = backendProducts.reduce<Category[]>((groups, product) => {
+  const searchTokens = normalizeSearch(searchQuery.trim()).split(/\s+/).filter(Boolean);
+  const matchingProducts = backendProducts.filter((product) => {
+    if (searchTokens.length === 0) return true;
+    const searchableText = normalizeSearch([
+      product.name,
+      product.slug || '',
+      product.description || '',
+      product.category_name || 'Productos',
+      String(product.price),
+      Number(product.price).toLocaleString('es-CO'),
+      product.stock === undefined ? '' : product.stock > 0 ? 'disponible' : 'agotado',
+    ].join(' '));
+    return searchTokens.every((token) => searchableText.includes(token));
+  });
+
+  const categoriesToRender: Category[] = matchingProducts.reduce<Category[]>((groups, product) => {
     const categoryName = product.category_name || 'Productos';
     let group = groups.find((entry) => entry.name === categoryName);
     if (!group) { group = { name: categoryName, products: [] }; groups.push(group); }
-    group.products.push({ id: product.id, name: product.name, price: `$${Number(product.price).toLocaleString('es-CO')}`, image: product.main_image_url || '/images/products/galletas-chocolate.svg', colors: ['#d9b787', '#a36a4f', '#e7d0af'], position: '50% 50%' });
+    group.products.push({ id: product.id, name: product.name, price: `$${Number(product.price).toLocaleString('es-CO')}`, image: product.main_image_url || '/images/products/galletas-chocolate.svg', colors: ['#d9b787', '#a36a4f', '#e7d0af'], position: '50% 50%', reviewSummary: reviewSummaries[product.id] });
     return groups;
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
+    <div id="top" className="min-h-screen bg-[#f3efe8] text-[#694d3e]">
       <div className="mx-auto max-w-[1600px]">
         <header className="border-b border-[#d8c5b4] bg-[linear-gradient(135deg,#f5efe7_0%,#f0e3d5_48%,#e0c7ac_100%)]">
           <div className="mx-auto max-w-[1500px] px-6 py-7">
@@ -168,9 +198,10 @@ export default function ShopPage() {
               <nav className="flex flex-wrap items-center justify-center gap-6 text-[0.9rem] uppercase tracking-[0.22em] text-[#6d4c3a] lg:gap-10 lg:text-[1.1rem]">
                 {[
                   { label: 'HOME', href: '/' },
-                  { label: 'ABOUT', href: '#' },
+                  { label: 'ABOUT', href: '/about' },
                   { label: 'SHOP', href: '/shop' },
-                  { label: 'CONTACT', href: '#' },
+                  { label: 'SEGUIR PEDIDO', href: '/pedido' },
+                  { label: 'CONTACT', href: '/contact' },
                 ].map((item) => (
                   <a
                     key={item.label}
@@ -182,13 +213,7 @@ export default function ShopPage() {
                 ))}
 
                 <div className="flex items-center gap-3 pl-2">
-                  <button
-                    type="button"
-                    aria-label="Buscar"
-                    className="flex h-12 w-12 items-center justify-center rounded-full border border-[#b38d6a] bg-[linear-gradient(135deg,#f8f2eb_0%,#f0e4d7_100%)] text-xl text-[#6d4c3a] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_6px_14px_rgba(123,92,71,0.16)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-[linear-gradient(135deg,#f8f2eb_0%,#ead7c0_100%)]"
-                  >
-                    ⌕
-                  </button>
+                  <CatalogSearch />
                   <UserNav />
                   <Link
                     href="/cart"
@@ -226,9 +251,21 @@ export default function ShopPage() {
             </Link>
           </section>
 
+          {searchQuery && (
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#d7c3af] bg-[#f9f5f0] px-5 py-4">
+              <p className="text-sm text-[#684b3d]" aria-live="polite">
+                {isCatalogLoading ? 'Buscando en el catálogo…' : `${matchingProducts.length} ${matchingProducts.length === 1 ? 'producto encontrado' : 'productos encontrados'} para “${searchQuery}”.`}
+              </p>
+              <Link href="/shop" className="text-sm font-semibold text-[#80543f] underline decoration-[#b88f71] underline-offset-4 hover:text-[#5e3c2d]">
+                Limpiar búsqueda
+              </Link>
+            </div>
+          )}
+
           <section className="space-y-6">
             {catalogError && <p className="rounded-xl border border-[#d88975] bg-[#faebe7] p-4 text-center text-sm text-[#8b3527]">{catalogError}</p>}
-            {!catalogError && categoriesToRender.length === 0 && <p className="rounded-xl border border-[#d7c3af] bg-[#f9f5f0] p-8 text-center">Cargando catálogo...</p>}
+            {!catalogError && isCatalogLoading && <p className="rounded-xl border border-[#d7c3af] bg-[#f9f5f0] p-8 text-center">Cargando catalogo...</p>}
+            {!catalogError && !isCatalogLoading && categoriesToRender.length === 0 && <p className="rounded-xl border border-[#d7c3af] bg-[#f9f5f0] p-8 text-center">{searchQuery ? `No encontramos productos para ?${searchQuery}?. Prueba con otro nombre o categoria.` : 'Aun no hay productos disponibles.'}</p>}
             {categoriesToRender.map((category) => (
               <details
                 key={category.name}
@@ -283,6 +320,7 @@ export default function ShopPage() {
                           <div className="mt-4 text-[1.5rem] italic text-[#6d4c3a]">
                             {product.price}
                           </div>
+                          <ProductReviews productId={product.id} summary={product.reviewSummary} />
                         </div>
 
                         <AddToCartButton
@@ -304,76 +342,7 @@ export default function ShopPage() {
           </section>
         </main>
 
-        <footer className="mt-8 border-t border-[#c7a988] bg-[#1e1d1d] text-[#f5efe7]">
-          <div className="mx-auto max-w-[1500px] px-6 py-8">
-            <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#f3e7dc] text-2xl text-[#5f4134]">
-                  M
-                </div>
-                <div>
-                  <div className="text-[1.1rem] font-semibold uppercase tracking-[0.2em] text-[#f5efe7]">
-                    Mai Reposteria
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid flex-1 grid-cols-2 gap-4 text-sm md:grid-cols-3 xl:grid-cols-6">
-                {[
-                  { label: 'MENÚ', href: '/shop' },
-                  { label: 'PEDIDOS PERSONALIZADOS', href: '#' },
-                  { label: 'PAGOS', href: '#' },
-                  { label: 'ENVÍOS', href: '#' },
-                  { label: 'RESEÑAS', href: '#' },
-                  { label: 'CONTACTO', href: '#' },
-                  { label: 'POLÍTICA DE PRIVACIDAD', href: '/politica-de-privacidad' },
-                  { label: 'TÉRMINOS Y CONDICIONES', href: '/terminos-y-condiciones' },
-                  { label: 'AYUDA', href: '#' },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="text-[#f5efe7]/90 transition-colors hover:text-[#e4c7af]"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-
-              <div className="flex items-center gap-4 text-[#f5efe7]">
-                <a href="#" aria-label="X" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  X
-                </a>
-                <a href="#" aria-label="Instagram" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  ◌
-                </a>
-                <a href="#" aria-label="Facebook" className="flex h-9 w-9 items-center justify-center rounded-full border border-[#d8c5b4] bg-[#2b2a2a] text-lg">
-                  f
-                </a>
-              </div>
-            </div>
-
-            <div className="mt-8 border-t border-[#c7a988]/70 pt-6 text-sm text-[#f5efe7]/80">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-                  <button
-                    type="button"
-                    onClick={openCookieSettings}
-                    className="text-left transition-colors hover:text-[#e4c7af]"
-                  >
-                    Preferencias de cookies
-                  </button>
-                  <span>© 2026 Mai Reposteria. Todos los derechos reservados.</span>
-                </div>
-
-                <a href="#" className="flex items-center gap-2 self-start text-[#f5efe7] md:self-auto">
-                  <span>IR AL INICIO</span>
-                  <span className="text-lg">↑</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        </footer>
+        <StoreFooter />
       </div>
     </div>
   );
